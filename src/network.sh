@@ -15,6 +15,7 @@ set -Eeuo pipefail
 : "${DNSMASQ_OPTS:=""}"
 : "${DNSMASQ:="/usr/sbin/dnsmasq"}"
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
+: "${IP_ADDR:="20.20.20.21"}"   # Initial data disk size
 
 ADD_ERR="Please add the following setting to your container:"
 
@@ -140,7 +141,7 @@ configureNAT() {
 
   # Create a bridge with a static IP for the VM guest
 
-  VM_NET_IP='20.20.20.21'
+  VM_NET_IP=$IP_ADDR
   [[ "$DEBUG" == [Yy1]* ]] && set -x
 
   { ip link add dev dockerbridge type bridge ; rc=$?; } || :
