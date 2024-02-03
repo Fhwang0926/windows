@@ -461,7 +461,7 @@ fi
 : "${DISK3_SIZE:=""}"
 : "${DISK4_SIZE:=""}"
 
-: "${DEVICE:="/data/opt"}"        # Docker variables to passthrough a block device, like /dev/vdc1.
+: "${DEVICE:=""}"        # Docker variables to passthrough a block device, like /dev/vdc1.
 : "${DEVICE2:=""}"
 : "${DEVICE3:=""}"
 : "${DEVICE4:=""}"
