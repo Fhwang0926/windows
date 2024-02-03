@@ -405,7 +405,8 @@ addDisk () {
     -device virtio-scsi-pci,id=hw-$DISK_ID,iothread=io2,bus=pcie.0,addr=$DISK_ADDRESS \
     -drive file=$DISK_FILE,if=none,id=drive-$DISK_ID,format=$DISK_FMT,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on \
     -device scsi-hd,bus=hw-$DISK_ID.0,channel=0,scsi-id=0,lun=0,drive=drive-$DISK_ID,id=$DISK_ID,rotation_rate=$DISK_ROTATION,bootindex=$DISK_INDEX \"
-    -device file=/opt/data/file.img,format=raw"
+    "
+    # -device file=/opt/data/file.img,format=raw"
     # \
     # -smb /opt/data"
 
