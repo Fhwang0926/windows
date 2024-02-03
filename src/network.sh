@@ -295,7 +295,7 @@ configureCustom() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,ifname=tap0,script=no,downscript=no,net=10.20.0.15/24,host=10.20.0.1,ipv6=off"
+  NET_OPTS="-netdev tap,id=hostnet0,ifname=tap0,script=no,downscript=no,host=10.20.0.1,ipv6=off"
 
   return 0
 }
