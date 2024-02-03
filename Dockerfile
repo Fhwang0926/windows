@@ -22,6 +22,8 @@ RUN chmod +x /run/*.sh
 EXPOSE 8006 3389
 VOLUME /storage
 
+RUN mkdir -p /opt/data
+
 ENV RAM_SIZE "4G"
 ENV CPU_CORES "2"
 ENV DISK_SIZE "64G"
