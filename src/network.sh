@@ -259,43 +259,79 @@ getInfo() {
 
 configureCustom() {
 
-  # Create a macvtap network for the VM guest
+  # Create the necessary file structure for /dev/net/tun
+  if [ ! -c /dev/net/tun ]; then
+    [ ! -d /dev/net ] && mkdir -m 755 /dev/net
+    if mknod /dev/net/tun c 10 200; then
+      chmod 666 /dev/net/tun
+    fi
+  fi
 
-  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
+  if [ ! -c /dev/net/tun ]; then
+    error "TUN device missing. $ADD_ERR --cap-add NET_ADMIN" && exit 25
+  fi
 
-  while ! ip link set "$VM_NET_TAP" up; do
+  # Check port forwarding flag
+  if [[ $(< /proc/sys/net/ipv4/ip_forward) -eq 0 ]]; then
+    { sysctl -w net.ipv4.ip_forward=1 ; rc=$?; } || :
+    if (( rc != 0 )); then
+      error "IP forwarding is disabled. $ADD_ERR --sysctl net.ipv4.ip_forward=1" && exit 24
+    fi
+  fi
+
+  # Create a bridge with a static IP for the VM guest
+
+  VM_NET_IP=$IP_ADDR
+  [[ "$DEBUG" == [Yy1]* ]] && set -x
+
+  { ip link add dev dockerbridge type bridge ; rc=$?; } || :
+
+  if (( rc != 0 )); then
+    error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
+  fi
+
+  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
+
+  while ! ip link set dockerbridge up; do
     info "Waiting for address to become available..."
     sleep 2
   done
 
-  local TAP_NR TAP_PATH MAJOR MINOR
-  TAP_NR=$(</sys/class/net/"$VM_NET_TAP"/ifindex)
-  TAP_PATH="/dev/tap${TAP_NR}"
+  # QEMU Works with taps, set tap to the bridge created
+  ip tuntap add dev "$VM_NET_TAP" mode tap
 
-  # Create dev file (there is no udev in container: need to be done manually)
-  IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev)
-  (( MAJOR < 1)) && error "Cannot find: sys/devices/virtual/net/$VM_NET_TAP" && exit 18
+  while ! ip link set "$VM_NET_TAP" up promisc on; do
+    info "Waiting for tap to become available..."
+    sleep 2
+  done
 
-  [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH"
+  ip link set dev "$VM_NET_TAP" master dockerbridge
 
-  if [[ ! -e "$TAP_PATH" ]]; then
-    { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
-    (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
+  # Add internet connection to the VM
+  update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
+  update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
+
+  exclude=$(getPorts "$HOST_PORTS")
+
+  iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
+  # shellcheck disable=SC2086
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p tcp${exclude} -j DNAT --to "$VM_NET_IP"
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p udp  -j DNAT --to "$VM_NET_IP"
+
+  if (( KERNEL > 4 )); then
+    # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
+    iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
 
-  { exec 30>>"$TAP_PATH"; rc=$?; } 2>/dev/null || :
+  { set +x; } 2>/dev/null
+  [[ "$DEBUG" == [Yy1]* ]] && echo
 
-  if (( rc != 0 )); then
-    error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
-  fi
+  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
   { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
-  if (( rc != 0 )); then
-    error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
-  fi
-
-  NET_OPTS="-netdev tap,id=hostnet0,ifname=tap0,script=no,downscript=no"
+  configureDNS
 
   return 0
 }
@@ -330,14 +366,17 @@ if [[ "$DHCP" == [Yy1]* ]]; then
 
 else
 
+  html "Initializing network NAT..."
+  configureNAT
+
   # Configuration for static IP
-  if [[ "$NAT" == [Yy1]* ]]; then
-    html "Initializing network NAT..."
-    configureNAT
-  else
-    html "Initializing network Custom..."
-    configureCustom
-  fi  
+  # if [[ "$NAT" == [Yy1]* ]]; then
+  #   html "Initializing network NAT..."
+  #   configureNAT
+  # else
+  #   html "Initializing network Custom..."
+  #   configureCustom
+  # fi  
   
 
 fi
