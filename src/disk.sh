@@ -499,7 +499,8 @@ if [ -n "$DATA_PATH" ]; then
     qemu-img create $DATA_PATH/data.img 4G
   fi
   DISK_OPTS="$DISK_OPTS \
-      -drive file=$DATA_PATH/data.img,format=raw"
+      -drive file=$DATA_PATH/data.img,format=raw,aio=native "
+  info "check opt $DISK_OPTS"
 fi
 
 html "Initialized disks successfully..."
