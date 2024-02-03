@@ -465,6 +465,7 @@ fi
 : "${DEVICE2:=""}"
 : "${DEVICE3:=""}"
 : "${DEVICE4:=""}"
+: "${DATA_PATH:=""}"
 
 if [ -n "$DEVICE" ]; then
   addDevice "userdata" "$DEVICE" "device" "3" "0xa" || exit $?
@@ -490,10 +491,11 @@ else
   addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "6" "0xd" "$DISK_FMT" || exit $?
 fi
 
-# opt
 
-# DISK_OPTS="$DISK_OPTS \
-#     -drive file=/opt/data/file.img,format=raw"
+if [ -n "$DATA_PATH" ]; then
+  DISK_OPTS="$DISK_OPTS \
+      -drive file=/opt/data/file.img,format=raw"
+fi
 
 html "Initialized disks successfully..."
 return 0
