@@ -256,7 +256,7 @@ getInfo() {
   return 0
 }
 
-configureDHCP() {
+configureCustom() {
 
   # Create a macvtap network for the VM guest
 
