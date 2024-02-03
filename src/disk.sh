@@ -496,7 +496,7 @@ if [ -n "$DATA_PATH" ]; then
 
   if [ ! -d "$DATA_PATH/data.img" ]; then
     # create
-    qemu-img create $DATA_PATH/data.img 4GB
+    bash -c "qemu-img create $DATA_PATH/data.img 4GB"
   fi
   DISK_OPTS="$DISK_OPTS \
       -drive file=$DATA_PATH/data.img,format=raw"
