@@ -21,6 +21,7 @@ RUN chmod +x /run/*.sh
 
 EXPOSE 8006 3389
 VOLUME /storage
+VOLUME /opt/data
 
 # RUN mkdir -p /opt/data
 # RUN qemu-img create /opt/data/file.img 10G
