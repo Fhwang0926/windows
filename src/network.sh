@@ -27,6 +27,7 @@ ADD_ERR="Please add the following setting to your container:"
 configureDHCP() {
 
   # Create a macvtap network for the VM guest
+  # using qemu NAT
 
   { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
 
@@ -294,7 +295,7 @@ configureCustom() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  NET_OPTS="-netdev user,id=hostnet0,net=10.20.0.0/24,host=10.20.0.1"
+  NET_OPTS="-netdev user,id=hostnet0,net=10.20.0.15/24,host=10.20.0.1"
 
   return 0
 }
