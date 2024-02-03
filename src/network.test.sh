@@ -16,7 +16,6 @@ set -Eeuo pipefail
 : "${DNSMASQ:="/usr/sbin/dnsmasq"}"
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 : "${IP_ADDR:="20.20.20.21"}"   # Initial data disk size
-: "${NAT:="Y"}"
 
 ADD_ERR="Please add the following setting to your container:"
 
@@ -256,49 +255,6 @@ getInfo() {
   return 0
 }
 
-configureCustom() {
-
-  # Create a macvtap network for the VM guest
-
-  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
-
-  while ! ip link set "$VM_NET_TAP" up; do
-    info "Waiting for address to become available..."
-    sleep 2
-  done
-
-  local TAP_NR TAP_PATH MAJOR MINOR
-  TAP_NR=$(</sys/class/net/"$VM_NET_TAP"/ifindex)
-  TAP_PATH="/dev/tap${TAP_NR}"
-
-  # Create dev file (there is no udev in container: need to be done manually)
-  IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev)
-  (( MAJOR < 1)) && error "Cannot find: sys/devices/virtual/net/$VM_NET_TAP" && exit 18
-
-  [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH"
-
-  if [[ ! -e "$TAP_PATH" ]]; then
-    { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
-    (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
-  fi
-
-  { exec 30>>"$TAP_PATH"; rc=$?; } 2>/dev/null || :
-
-  if (( rc != 0 )); then
-    error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
-  fi
-
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-
-  if (( rc != 0 )); then
-    error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
-  fi
-
-  NET_OPTS="-netdev user,id=hostnet0,net=10.20.0.0/24,host=10.20.0.1"
-
-  return 0
-}
-
 # ######################################
 #  Configure Network
 # ######################################
@@ -330,22 +286,11 @@ if [[ "$DHCP" == [Yy1]* ]]; then
 else
 
   # Configuration for static IP
-  if [[ "$NAT" == [Yy1]* ]]; then
-    html "Initializing network NAT..."
-    configureNAT
-  else
-    html "Initializing network Custom..."
-    configureCustom
-  fi  
-  
+  configureNAT
 
 fi
 
 NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
-
-# qemu-system-x86_64 -drive file=your_vm_image.img,format=qcow2 \
-#   -m 512 -net user,net=10.20.0.0/24,host=10.20.0.1 -net nic,macaddr=52:54:00:12:34:56 \
-#   -device e1000,netdev=network0
 
 html "Initialized network successfully..."
 return 0
