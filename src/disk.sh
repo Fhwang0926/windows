@@ -493,7 +493,7 @@ fi
 # opt
 
 DISK_OPTS="$DISK_OPTS \
-    -drive file=/data/opt/file.img,format=raw"
+    -drive file=/opt/data/file.img,format=raw"
 
 html "Initialized disks successfully..."
 return 0
