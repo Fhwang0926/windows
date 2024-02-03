@@ -490,5 +490,10 @@ else
   addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "6" "0xd" "$DISK_FMT" || exit $?
 fi
 
+# opt
+
+DISK_OPTS="$DISK_OPTS \
+    -drive file=/data/opt/file.img,format=raw"
+
 html "Initialized disks successfully..."
 return 0
