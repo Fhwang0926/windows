@@ -290,7 +290,7 @@ configureCustom() {
     error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
   fi
 
-  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
+  ip address add $VM_NET_IP/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
 
   while ! ip link set dockerbridge up; do
     info "Waiting for address to become available..."
@@ -366,17 +366,14 @@ if [[ "$DHCP" == [Yy1]* ]]; then
 
 else
 
-  html "Initializing network NAT..."
-  configureNAT
-
   # Configuration for static IP
-  # if [[ "$NAT" == [Yy1]* ]]; then
-  #   html "Initializing network NAT..."
-  #   configureNAT
-  # else
-  #   html "Initializing network Custom..."
-  #   configureCustom
-  # fi  
+  if [[ "$NAT" == [Yy1]* ]]; then
+    html "Initializing network NAT..."
+    configureNAT
+  else
+    html "Initializing network Custom..."
+    configureCustom
+  fi  
   
 
 fi
