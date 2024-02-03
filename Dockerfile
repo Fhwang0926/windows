@@ -23,6 +23,7 @@ EXPOSE 8006 3389
 VOLUME /storage
 
 RUN mkdir -p /opt/data
+RUN ls -al /opt/data
 # RUN echo -e /opt/data *\(rw,sync,no_subtree_check\) >> /etc/exports
 
 ENV RAM_SIZE "4G"

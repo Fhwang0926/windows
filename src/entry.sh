@@ -20,7 +20,6 @@ cd /run
 trap - ERR
 
 info "Booting $APP using $VERS..."
-echo "Booting $APP using $VERS..."
 [[ "$DEBUG" == [Yy1]* ]] && echo "Arguments: $ARGS" && echo
 
 { qemu-system-x86_64 ${ARGS:+ $ARGS} >"$QEMU_OUT" 2>"$QEMU_LOG"; rc=$?; } || :
