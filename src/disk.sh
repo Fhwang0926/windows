@@ -500,7 +500,7 @@ if [ -n "$DATA_PATH" ]; then
   # fi
   DISK_OPTS="$DISK_OPTS \
       -nic user,model=virtio-net-pci,id=net0,smb=$DATA_PATH \
-      -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6"
+      -device virtio-scsi-pci,id=balloon1,bus=pcie.1,addr=0x6"
       # -nic user,model=virtio-net-pci,id=net0,smb=$DATA_PATH "
   info "check opt $DISK_OPTS"
 fi
