@@ -499,7 +499,7 @@ if [ -n "$DATA_PATH" ]; then
   #   qemu-img create $DATA_PATH/data.img 4G
   # fi
   DISK_OPTS="$DISK_OPTS \
-      -nic user,id=nic0,smb=$DATA_PATH "
+      -nic user,id=nic1,smb=$DATA_PATH "
   info "check opt $DISK_OPTS"
 fi
 
