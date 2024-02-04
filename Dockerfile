@@ -7,7 +7,7 @@ ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
-        vim net-tools iputils-ping \
+        vim net-tools iputils-ping samba \
         curl \
         7zip \
         wimtools \
