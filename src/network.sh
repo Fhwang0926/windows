@@ -364,6 +364,8 @@ if [[ "$DHCP" == [Yy1]* ]]; then
   # Configuration for DHCP IP
   configureDHCP
 
+  NET_OPTS="$NET_OPTS -nic user,hostfwd=tcp::139-:139,hostfwd=tcp::445-:445"
+
 else
 
   # Configuration for static IP

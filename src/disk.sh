@@ -492,18 +492,18 @@ else
 fi
 
 
-if [ -n "$DATA_PATH" ]; then
+# if [ -n "$DATA_PATH" ]; then
 
-  # if [ ! -d "$DATA_PATH/data.img" ]; then
-  #   # create
-  #   qemu-img create $DATA_PATH/data.img 4G
-  # fi
-  DISK_OPTS="$DISK_OPTS \
-      -nic user,smb=$DATA_PATH \"
-      -net nic,model=virtio"
-      
-  info "check opt $DISK_OPTS"
-fi
+#   # if [ ! -d "$DATA_PATH/data.img" ]; then
+#   #   # create
+#   #   qemu-img create $DATA_PATH/data.img 4G
+#   # fi
+#   # DISK_OPTS="$DISK_OPTS \
+#   #     -nic user,smb=$DATA_PATH \"
+#   #     -net nic,model=virtio"
+
+#   # info "check opt $DISK_OPTS"
+# fi
 
 html "Initialized disks successfully..."
 return 0
