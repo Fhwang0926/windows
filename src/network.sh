@@ -68,7 +68,7 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30"
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30,hostfwd=tcp::139-:139,hostfwd=tcp::445-:445"
 
   return 0
 }
@@ -363,8 +363,6 @@ if [[ "$DHCP" == [Yy1]* ]]; then
 
   # Configuration for DHCP IP
   configureDHCP
-
-  NET_OPTS="$NET_OPTS -nic user,hostfwd=tcp::139-:139,hostfwd=tcp::445-:445"
 
 else
 
