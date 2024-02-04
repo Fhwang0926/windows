@@ -499,8 +499,7 @@ if [ -n "$DATA_PATH" ]; then
   #   qemu-img create $DATA_PATH/data.img 4G
   # fi
   DISK_OPTS="$DISK_OPTS \
-      -nic user,model=virtio-net-pci,id=balloon1,smb=$DATA_PATH \
-      -device virtio-scsi-pci,id=balloon1,bus=pcie.0"
+      -nic user,model=virtio-net-pci,id=balloon1,smb=$DATA_PATH"
   info "check opt $DISK_OPTS"
 fi
 
