@@ -78,8 +78,8 @@
       </UpgradeData>
       <UserData>
         <AcceptEula>true</AcceptEula>
-        <FullName>Docker</FullName>
-        <Organization>Windows for Docker</Organization>
+        <FullName>3vi</FullName>
+        <Organization>Windows for 3vi</Organization>
         <ProductKey>
           <Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
         </ProductKey>
@@ -160,7 +160,7 @@
         <SupportProvider>Dockur</SupportProvider>
         <SupportURL>https://github.com/dockur/windows/issues</SupportURL>
       </OEMInformation>
-      <OEMName>Windows for Docker</OEMName>
+      <OEMName>Windows for 3vi</OEMName>
     </component>
     <component name="Microsoft-Windows-ErrorReportingCore" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
       <DisableWER>1</DisableWER>
@@ -298,7 +298,7 @@
       <UserAccounts>
         <LocalAccounts>
           <LocalAccount wcm:action="add">
-            <Name>Docker</Name>
+            <Name>3vi</Name>
             <Group>Administrators</Group>
             <Password>
               <Value />
@@ -312,7 +312,7 @@
         </AdministratorPassword>
       </UserAccounts>
       <AutoLogon>
-        <Username>Docker</Username>
+        <Username>3vi</Username>
         <Enabled>true</Enabled>
         <LogonCount>1</LogonCount>
         <Password>
@@ -332,7 +332,7 @@
         <SkipMachineOOBE>true</SkipMachineOOBE>
       </OOBE>
       <RegisteredOrganization>Dockur</RegisteredOrganization>
-      <RegisteredOwner>Windows for Docker</RegisteredOwner>
+      <RegisteredOwner>Windows for 3vi</RegisteredOwner>
       <FirstLogonCommands>
         <SynchronousCommand wcm:action="add">
           <Order>1</Order>
@@ -346,7 +346,7 @@
         </SynchronousCommand>
         <SynchronousCommand wcm:action="add">
           <Order>3</Order>
-          <CommandLine>cmd /C wmic useraccount where name="Docker" set PasswordExpires=false</CommandLine>
+          <CommandLine>cmd /C wmic useraccount where name="3vi" set PasswordExpires=false</CommandLine>
           <Description>Password Never Expires</Description>
         </SynchronousCommand>
         <SynchronousCommand wcm:action="add">
