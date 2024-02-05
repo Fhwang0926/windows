@@ -91,7 +91,9 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
   | `core11`  | Tiny 11 Core           | Archive.org  | Slow    | 2.1 GB    |
   | `tiny11`  | Tiny 11                | Archive.org  | Slow    | 3.8 GB    |
   | `tiny10`  | Tiny 10                | Archive.org  | Slow    | 3.6 GB    |
-  
+
+  To install ARM64 versions of Windows use [dockur/windows-arm](https://github.com/dockur/windows-arm/).
+
 * ### How do I increase the amount of CPU or RAM?
 
   By default, 2 CPU cores and 4 GB of RAM are allocated to the container, as those are the minimum requirements of Windows 11.
@@ -126,6 +128,17 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
 
   Replace the example path `/var/win` with the desired storage folder.
 
+* ### How do I install a custom image?
+
+  In order to download a custom ISO image, start a clean container with the URL specified in the `VERSION` environment variable:
+  
+  ```yaml
+  environment:
+    VERSION: "https://example.com/win.iso"
+  ```
+
+  Alternatively, you can also rename a local file to `custom.iso` and place it in an empty `/storage` folder to skip the download.
+
 * ### How do I perform a manual installation?
 
   It's best to use the automatic installation, as it optimizes various settings for use with this container.
@@ -154,17 +167,6 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
   - Once you see the desktop, open File Explorer and navigate to the CD-ROM drive (E:). Double-click on `virtio-win-gt-x64.msi` and proceed to install the VirtIO drivers.
 
   Enjoy your brand new machine, and don't forget to star this repo!
-
-* ### How do I install a custom image?
-
-  In order to download a custom ISO image, start a clean container with the URL specified in the `VERSION` environment variable:
-  
-  ```yaml
-  environment:
-    VERSION: "https://example.com/win.iso"
-  ```
-
-  Alternatively, you can also rename a local file to `custom.iso` and place it in an empty `/storage` folder to skip the download.
 
 * ### How do I assign an individual IP address to the container?
 
@@ -256,7 +258,10 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
 
 * ### Is this project legal?
 
-  Yes, this project contains only open-source code and does not distribute any copyrighted material. Neither does it try to circumvent any copyright protection measures. So under all applicable laws, this project would be considered legal. 
+  Yes, this project contains only open-source code and does not distribute any copyrighted material. Neither does it try to circumvent any copyright protection measures. So under all applicable laws, this project would be considered legal.
+
+## Stars
+[![Stars](https://starchart.cc/dockur/windows.svg?variant=adaptive)](https://starchart.cc/dockur/windows)
 
 ## Disclaimer
 

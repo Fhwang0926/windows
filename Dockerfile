@@ -11,7 +11,9 @@ RUN apt-get update \
         curl \
         7zip \
         wimtools \
+        cabextract \
         genisoimage \
+        libxml2-utils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
