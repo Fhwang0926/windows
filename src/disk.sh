@@ -491,6 +491,11 @@ else
   addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "6" "0xd" "$DISK_FMT" || exit $?
 fi
 
+DISK_OPTS="$DISK_OPTS \
+    -chardev socket,id=char0,path=/tmp/virtiofs_socket \"
+    -device vhost-user-fs-pci,queue-size=1024,chardev=char0,tag=my_virtiofs \
+    -net nic,model=virtio"
+
 
 # if [ -n "$DATA_PATH" ]; then
 
