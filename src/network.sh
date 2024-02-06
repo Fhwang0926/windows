@@ -283,7 +283,7 @@ configureCustom() {
   # DNSMASQ를 통한 DHCP 서버 구동
 
   # 네트워크 설정에 맞게 DNSMASQ 옵션 구성
-  VM_NET_IP_PREFIX="$(echo $VM_NET_IP | cut -d '.' -f 1-3)" # 예: 20.20.20
+  VM_NET_IP_PREFIX="$(echo $IP_ADDR | cut -d '.' -f 1-3)" # 예: 20.20.20
   DHCP_START="${VM_NET_IP_PREFIX}.50"
   DHCP_END="${VM_NET_IP_PREFIX}.100"
   DHCP_RANGE="$DHCP_START,$DHCP_END,255.255.255.0,24h"
