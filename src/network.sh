@@ -295,8 +295,6 @@ configureCustom() {
   ip link set "$VM_NET_TAP" up
   ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP"
 
-  error "ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP""
-  
   # NAT 설정을 위한 iptables 규칙 설정
   iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
   
@@ -313,6 +311,8 @@ configureCustom() {
   $DNSMASQ $DNSMASQ_OPTS
 
   NET_OPTS="-netdev tap,id=hostnet0,ifname=$VM_NET_TAP,script=no,downscript=no -device virtio-net-pci,netdev=hostnet0,mac=$VM_NET_MAC"
+
+  error "$NET_OPTS"
 }
 
 # ######################################
