@@ -280,6 +280,15 @@ configureCustom() {
     fi
   fi
 
+  # DNSMASQ를 통한 DHCP 서버 구동
+
+  # 네트워크 설정에 맞게 DNSMASQ 옵션 구성
+  VM_NET_IP_PREFIX="$(echo $VM_NET_IP | cut -d '.' -f 1-3)" # 예: 20.20.20
+  DHCP_START="${VM_NET_IP_PREFIX}.50"
+  DHCP_END="${VM_NET_IP_PREFIX}.100"
+  DHCP_RANGE="$DHCP_START,$DHCP_END,255.255.255.0,24h"
+  DNSMASQ_OPTS="--dhcp-range=$DHCP_RANGE"
+
   # 필요한 네트워크 인터페이스 및 TAP 생성
   VM_NET_IP="$IP_ADDR"
   ip tuntap add dev "$VM_NET_TAP" mode tap
@@ -290,14 +299,7 @@ configureCustom() {
   error "iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE"
   iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
   
-  # DNSMASQ를 통한 DHCP 서버 구동
 
-  # 네트워크 설정에 맞게 DNSMASQ 옵션 구성
-  VM_NET_IP_PREFIX=$(echo $IP_ADDR | cut -d '.' -f 1-3) # 예: 20.20.20
-  DHCP_START="${VM_NET_IP_PREFIX}.50"
-  DHCP_END="${VM_NET_IP_PREFIX}.100"
-  DHCP_RANGE="$DHCP_START,$DHCP_END,255.255.255.0,24h"
-  DNSMASQ_OPTS="--dhcp-range=$DHCP_RANGE"
 
   # 고정 IP 할당을 위한 DNSMASQ 옵션 추가 (필요한 경우)
   # DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-host=$VM_NET_MAC,$IP_ADDR,$VM_NET_HOST,infinite"
