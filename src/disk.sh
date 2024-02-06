@@ -494,7 +494,7 @@ fi
 DISK_OPTS="$DISK_OPTS \
     -chardev socket,id=char0,path=/tmp/virtiofs_socket \"
     -device vhost-user-fs-pci,queue-size=1024,chardev=char0,tag=my_virtiofs \
-    -net nic,model=virtio"
+    -m 4G -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem"
 
 
 # if [ -n "$DATA_PATH" ]; then
