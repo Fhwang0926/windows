@@ -342,13 +342,14 @@ if [[ "$DHCP" == [Yy1]* ]]; then
 
   # Configuration for DHCP IP
   configureDHCP
-
+  NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 else
 
   # Configuration for static IP
   if [[ "$NAT" == [Yy1]* ]]; then
     html "Initializing network NAT..."
     configureNAT
+    NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
   else
     html "Initializing network Custom..."
     configureCustom
@@ -356,8 +357,6 @@ else
   
 
 fi
-
-NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 
 # qemu-system-x86_64 -drive file=your_vm_image.img,format=qcow2 \
 #   -m 512 -net user,net=10.20.0.0/24,host=10.20.0.1 -net nic,macaddr=52:54:00:12:34:56 \
