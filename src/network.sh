@@ -310,7 +310,7 @@ configureCustom() {
   echo "DNSMASQ_OPTS: $DNSMASQ_OPTS"
   $DNSMASQ $DNSMASQ_OPTS
 
-  NET_OPTS="-netdev tap,id=hostnet0,ifname=$VM_NET_TAP,script=no,downscript=no -device virtio-net-pci,netdev=hostnet0,mac=$VM_NET_MAC"
+  NET_OPTS="-netdev tap,id=hostnet0,ifname=$VM_NET_TAP,script=no,downscript=no -device virtio-net-pci,netdev=hostnet0,mac=$VM_NET_MAC -d guest_errors"
 
   error "$NET_OPTS"
 }
