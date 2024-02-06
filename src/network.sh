@@ -294,9 +294,10 @@ configureCustom() {
   ip tuntap add dev "$VM_NET_TAP" mode tap
   ip link set "$VM_NET_TAP" up
   ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP"
+
+  error "ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP""
   
   # NAT 설정을 위한 iptables 규칙 설정
-  error "iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE"
   iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
   
 
