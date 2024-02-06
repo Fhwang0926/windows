@@ -497,7 +497,7 @@ DISK_OPTS="$DISK_OPTS \
     -m 4G -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem"
 
 # exute fs
-bash -c "/usr/libexec/virtiofsd --socket-path=/tmp/virtiofs_socket -o source=/opt"
+/usr/libexec/virtiofsd --socket-path=/tmp/virtiofs_socket -o source=/opt &
 
 
 # if [ -n "$DATA_PATH" ]; then
