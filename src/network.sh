@@ -292,11 +292,43 @@ configureCustom() {
   # 필요한 네트워크 인터페이스 및 TAP 생성
   VM_NET_IP="$IP_ADDR"
   ip tuntap add dev "$VM_NET_TAP" mode tap
+
+  while ! ip link set "$VM_NET_TAP" up promisc on; do
+    info "Waiting for tap to become available..."
+    sleep 2
+  done
+
+  # ip link set dev "$VM_NET_TAP" master dockerbridge
+
+  # Add internet connection to the VM
+  update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
+  update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
+
+  exclude=$(getPorts "$HOST_PORTS")
+
+  iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
+  # shellcheck disable=SC2086
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p tcp${exclude} -j DNAT --to "$VM_NET_IP"
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p udp  -j DNAT --to "$VM_NET_IP"
+
+  if (( KERNEL > 4 )); then
+    # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
+    iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
+  fi
+
+  { set +x; } 2>/dev/null
+  [[ "$DEBUG" == [Yy1]* ]] && echo
+
+  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
+
+  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
+
   ip link set "$VM_NET_TAP" up
   ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP"
 
   # NAT 설정을 위한 iptables 규칙 설정
-  iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
+  # iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
   
 
   # 고정 IP 할당을 위한 DNSMASQ 옵션 추가 (필요한 경우)
