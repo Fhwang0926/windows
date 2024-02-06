@@ -279,61 +279,36 @@ configureCustom() {
     fi
   fi
 
-  # Create a bridge with a static IP for the VM guest
-
-  VM_NET_IP=$IP_ADDR
-  [[ "$DEBUG" == [Yy1]* ]] && set -x
-
-  { ip link add dev dockerbridge type bridge ; rc=$?; } || :
-
-  if (( rc != 0 )); then
-    error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
-  fi
-
-  ip address add $VM_NET_IP/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
-
-  while ! ip link set dockerbridge up; do
-    info "Waiting for address to become available..."
-    sleep 2
-  done
-
-  # QEMU Works with taps, set tap to the bridge created
+  # 필요한 네트워크 인터페이스 및 TAP 생성
+  VM_NET_IP="$IP_ADDR"
   ip tuntap add dev "$VM_NET_TAP" mode tap
+  ip link set "$VM_NET_TAP" up
+  ip addr add "$VM_NET_IP/24" dev "$VM_NET_TAP"
+  
+  # NAT 설정을 위한 iptables 규칙 설정
+  iptables -t nat -A POSTROUTING -s $VM_NET_IP_PREFIX.0/24 ! -o $VM_NET_TAP -j MASQUERADE
+  
+  # DNSMASQ를 통한 DHCP 서버 구동
 
-  while ! ip link set "$VM_NET_TAP" up promisc on; do
-    info "Waiting for tap to become available..."
-    sleep 2
-  done
+  # 네트워크 설정에 맞게 DNSMASQ 옵션 구성
+  VM_NET_IP_PREFIX=$(echo $IP_ADDR | cut -d '.' -f 1-3) # 예: 20.20.20
+  DHCP_START="${VM_NET_IP_PREFIX}.50"
+  DHCP_END="${VM_NET_IP_PREFIX}.100"
+  DHCP_RANGE="$DHCP_START,$DHCP_END,255.255.255.0,24h"
+  DNSMASQ_OPTS="--dhcp-range=$DHCP_RANGE"
 
-  ip link set dev "$VM_NET_TAP" master dockerbridge
+  # 고정 IP 할당을 위한 DNSMASQ 옵션 추가 (필요한 경우)
+  # DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-host=$VM_NET_MAC,$IP_ADDR,$VM_NET_HOST,infinite"
 
-  # Add internet connection to the VM
-  update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
-  update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
+  # DNS 서버와 게이트웨이 옵션 설정
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,${VM_NET_IP_PREFIX}.1"
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:router,${VM_NET_IP_PREFIX}.1"
 
-  exclude=$(getPorts "$HOST_PORTS")
+  # DNSMASQ 실행
+  echo "DNSMASQ_OPTS: $DNSMASQ_OPTS"
+  $DNSMASQ $DNSMASQ_OPTS
 
-  iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
-  # shellcheck disable=SC2086
-  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p tcp${exclude} -j DNAT --to "$VM_NET_IP"
-  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p udp  -j DNAT --to "$VM_NET_IP"
-
-  if (( KERNEL > 4 )); then
-    # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
-    iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
-  fi
-
-  { set +x; } 2>/dev/null
-  [[ "$DEBUG" == [Yy1]* ]] && echo
-
-  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
-
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
-
-  configureDNS
-
-  return 0
+  NET_OPTS="-netdev tap,id=hostnet0,ifname=$VM_NET_TAP,script=no,downscript=no -device virtio-net-pci,netdev=hostnet0,mac=$VM_NET_MAC"
 }
 
 # ######################################
