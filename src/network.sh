@@ -17,6 +17,7 @@ set -Eeuo pipefail
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 : "${IP_ADDR:="20.20.20.21"}"   # Initial data disk size
 : "${NAT:="Y"}"
+: "${VM_NET_IP_PREFIX:=""}"
 
 ADD_ERR="Please add the following setting to your container:"
 
