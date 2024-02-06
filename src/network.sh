@@ -317,10 +317,10 @@ configureCustom() {
   { set +x; } 2>/dev/null
   [[ "$DEBUG" == [Yy1]* ]] && echo
 
-  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
+  # NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
+  # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  # (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
   # ip link set "$VM_NET_TAP" up
   ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP"
