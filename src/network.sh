@@ -306,13 +306,13 @@ configureCustom() {
 
   # iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
   # # shellcheck disable=SC2086
-  # iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p tcp${exclude} -j DNAT --to "$VM_NET_IP"
-  # iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p udp  -j DNAT --to "$VM_NET_IP"
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p tcp${exclude} -j DNAT --to "$VM_NET_IP"
+  iptables -t nat -A PREROUTING -i "$VM_NET_DEV" -d "$IP" -p udp  -j DNAT --to "$VM_NET_IP"
 
-  # if (( KERNEL > 4 )); then
-  #   # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
-  #   iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
-  # fi
+  if (( KERNEL > 4 )); then
+    # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
+    iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
+  fi
 
   { set +x; } 2>/dev/null
   [[ "$DEBUG" == [Yy1]* ]] && echo
@@ -322,7 +322,7 @@ configureCustom() {
   { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
-  ip link set "$VM_NET_TAP" up
+  # ip link set "$VM_NET_TAP" up
   ip addr add "$VM_NET_IP/24" brd ${VM_NET_IP_PREFIX}.255 dev "$VM_NET_TAP"
 
   # NAT 설정을 위한 iptables 규칙 설정
