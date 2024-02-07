@@ -508,7 +508,7 @@ DISK_OPTS="$DISK_OPTS \
 # exute fs
 # /usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt --cache=none &
 
-bash -c /usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock --shared-dir /opt --cache auto &
+# /usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock --shared-dir /opt --cache auto
 
 
 # if [ -n "$DATA_PATH" ]; then
