@@ -26,8 +26,7 @@ RUN chmod +x /run/*.sh
 
 EXPOSE 8006 3389
 VOLUME /storage
-VOLUME /opt
-VOLUME /tmp
+RUN touch /tmp/virtiofsd.sock
 # RUN touch /tmp/virtiofs_socket
 # VOLUME /opt/data
 # VOLUME /data/opt
