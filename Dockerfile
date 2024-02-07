@@ -26,10 +26,12 @@ RUN chmod +x /run/*.sh
 
 EXPOSE 8006 3389
 VOLUME /storage
-RUN touch /tmp/virtiofsd.sock
+# RUN touch /tmp/virtiofsd.sock
 # RUN touch /tmp/virtiofs_socket
 # VOLUME /opt/data
-# VOLUME /data/opt
+COPY virtiofsd.sh /etc/init.d/virtiofsd
+RUN chmod +x /etc/init.d/virtiofsd
+RUN update-rc.d virtiofsd defaults
 
 # RUN mkdir -p /opt/data
 # RUN qemu-img create /opt/data/file.img 10G
