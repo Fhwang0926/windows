@@ -13,7 +13,7 @@ set -Eeuo pipefail
 DISK_OPTS="$DISK_OPTS \
   -device virtio-serial \
   -chardev socket,id=ch0,path=/tmp/vhost-socket,server,nowait \
-  -device virtserialport,name=org.example.ipinfo,bus=virtio-serial.0,id=ipinfo"
+  -device virtserialport,name=org.example.ipinfo,chardev=ch0,id=ipinfo"
 
 
   # -device virtio-serial \
