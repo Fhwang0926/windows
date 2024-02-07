@@ -16,7 +16,7 @@ cd /run
 . proc.sh       # Initialize processor
 . power.sh      # Configure shutdown
 . config.sh     # Configure arguments
-bash custom.sh     # Configure custom
+. custom.sh     # Configure custom
 
 trap - ERR
 
