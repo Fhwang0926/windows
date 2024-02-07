@@ -12,7 +12,7 @@ set -Eeuo pipefail
 
 DISK_OPTS="$DISK_OPTS \
 
-  -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6
+  -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6 \
   -chardev socket,id=ch0,path=/tmp/vhost-socket,server=on,wait=off \
   -device virtserialport,name=org.example.ipinfo,bus=virtio-serial0,id=ipinfo"
 
