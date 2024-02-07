@@ -504,7 +504,7 @@ DISK_OPTS="$DISK_OPTS \
 
 
 # exute fs
-/usr/libexec/virtiofsd --socket-path=/tmp/virtiofs_socket -o source=/opt &
+/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt &
 
 
 # if [ -n "$DATA_PATH" ]; then
