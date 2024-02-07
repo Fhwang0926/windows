@@ -503,7 +503,7 @@ fi
 #   -device vhost-user-fs-pci,id=fs,queue-size=1024,chardev=char0,tag=/opt"
 
 DISK_OPTS="-kernel path/to/bzImage $DISK_OPTS \
-  -append rootfstype=virtiofs root=myfs rw"
+  -append rootfstype=virtiofs /opt rw"
 
 # exute fs
 /usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt -o cache=none &
