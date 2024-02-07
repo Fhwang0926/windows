@@ -7,6 +7,7 @@ SUPPORT="https://github.com/dockur/windows"
 
 cd /run
 
+. custom.sh     # Configure custom
 . reset.sh      # Initialize system
 . install.sh    # Run installation
 . disk.sh       # Initialize disks
@@ -16,7 +17,6 @@ cd /run
 . proc.sh       # Initialize processor
 . power.sh      # Configure shutdown
 . config.sh     # Configure arguments
-. custom.sh     # Configure custom
 
 trap - ERR
 
