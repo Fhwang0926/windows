@@ -39,8 +39,6 @@ ENV CPU_CORES "2"
 ENV DISK_SIZE "64G"
 ENV VERSION "win11"
 
-RUN /usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock --shared-dir /opt --cache auto
-
 ARG VERSION_ARG "0.0"
 RUN echo "$VERSION_ARG" > /run/version
 
