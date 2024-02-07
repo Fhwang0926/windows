@@ -46,5 +46,5 @@ ARG VERSION_ARG "0.0"
 RUN echo "$VERSION_ARG" > /run/version
 # CMD /etc/init.d/virtiofsd start
 # && /run/custom.sh
-ENTRYPOINT ["/usr/bin/tini", "--", "bash", "-c", "/run/entry.sh && /run/custom.sh"]
-# ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
+# ENTRYPOINT ["/usr/bin/tini", "--", "bash", "-c", "/run/entry.sh && /run/custom.sh"]
+ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
