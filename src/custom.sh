@@ -10,7 +10,7 @@ set -Eeuo pipefail
 # exute fs
 # /etc/init.d/virtiofsd start
 
-error "$(ls -al /tmp)"
+error "$(ls -al /tmp/vhost-socket)"
 
 DISK_OPTS="$DISK_OPTS \
 
