@@ -16,7 +16,7 @@ DISK_OPTS="$DISK_OPTS \
 #   -append rootfstype=virtiofs /tmp/virtiofsd.sock rw"
 
 # exute fs
-virtiofsd start
+/etc/init.d/virtiofsd start
 # bash -c "/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock --shared-dir /opt --cache auto" &
 
 
