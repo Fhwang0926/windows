@@ -12,7 +12,7 @@ set -Eeuo pipefail
 
 DISK_OPTS="$DISK_OPTS \
   -chardev socket,path=/tmp/qga.sock,server=on,wait=off,id=qga0 \
-  -device virtio-serial \
+  -device virtio-serial,bus=pcie.0,addr=0x6 \
   -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0"
 
   # -device virtio-serial-pci,addr=0x5 \
