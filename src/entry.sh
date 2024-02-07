@@ -21,8 +21,8 @@ echo network.sh init
 echo boot.sh init
 . proc.sh       # Initialize processor
 echo proc.sh init
-. custom.sh     # Configure custom
-echo custom.sh init
+# . custom.sh     # Configure custom
+# echo custom.sh init
 . power.sh      # Configure shutdown
 echo power.sh init
 . config.sh     # Configure arguments
