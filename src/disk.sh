@@ -497,14 +497,14 @@ fi
 #     -m 4G -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem"
 
 DISK_OPTS="$DISK_OPTS \
-  -object memory-backend-file,id=mem,size=2G,mem-path=/dev/shm,share=on \
+  -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on \
   -numa node,memdev=mem \
   -chardev socket,id=char0,path=/tmp/virtiofsd.sock \
-  -device vhost-user-fs-pci,queue-size=1024,chardev=char0,tag=/opt"
+  -device vhost-user-fs-pci,queue-size=4G,chardev=char0,tag=/opt"
 
 
 # exute fs
-/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt &
+/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt -o cache=none &
 
 
 # if [ -n "$DATA_PATH" ]; then
