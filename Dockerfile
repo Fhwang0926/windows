@@ -29,9 +29,11 @@ VOLUME /storage
 # RUN touch /tmp/virtiofsd.sock
 # RUN touch /tmp/virtiofs_socket
 # VOLUME /opt/data
-COPY virtiofsd.sh /etc/init.d/virtiofsd
-RUN chmod +x /etc/init.d/virtiofsd
-RUN update-rc.d virtiofsd defaults
+# COPY virtiofsd.sh /etc/init.d/virtiofsd
+# RUN chmod +x /etc/init.d/virtiofsd
+# RUN update-rc.d virtiofsd defaults
+
+RUN touch /tmp/vhost-socket
 
 # RUN mkdir -p /opt/data
 # RUN qemu-img create /opt/data/file.img 10G
