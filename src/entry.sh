@@ -7,12 +7,13 @@ SUPPORT="https://github.com/dockur/windows"
 
 cd /run
 
-. custom.sh     # Configure custom
+
 . reset.sh      # Initialize system
 . install.sh    # Run installation
 . disk.sh       # Initialize disks
 . display.sh    # Initialize graphics
 . network.sh    # Initialize network
+. custom.sh     # Configure custom
 . boot.sh       # Configure boot
 . proc.sh       # Initialize processor
 . power.sh      # Configure shutdown
