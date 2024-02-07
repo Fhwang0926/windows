@@ -45,7 +45,7 @@ finish() {
 
   closeNetwork
 
-  killall -9 /usr/libexec/virtiofsd
+  # killall /usr/libexec/virtiofsd
 
   sleep 0.5
   echo "❯ Shutdown completed!"
