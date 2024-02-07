@@ -9,7 +9,7 @@ set -Eeuo pipefail
 
 # exute fs
 # /etc/init.d/virtiofsd start
-
+chmod 777 /tmp/vhost-socket
 error "$(ls -al /tmp/vhost-socket)"
 
 DISK_OPTS="$DISK_OPTS \
