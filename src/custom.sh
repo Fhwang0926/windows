@@ -33,6 +33,6 @@ DISK_OPTS="$DISK_OPTS \
 #   # info "check opt $DISK_OPTS"
 # fi
 
-html "Initialized custom successfully..."
+info "Initialized custom successfully..."
 
 return 0
