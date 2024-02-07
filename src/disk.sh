@@ -496,6 +496,13 @@ fi
 #     -device vhost-user-fs-pci,queue-size=1024,chardev=char0,tag=my_virtiofs \
 #     -m 4G -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem"
 
+DISK_OPTS="$DISK_OPTS \
+  -object memory-backend-file,id=mem,size=2G,mem-path=/dev/shm,share=on \
+  -numa node,memdev=mem \
+  -chardev socket,id=char0,path=/tmp/virtiofsd.sock \
+  -device vhost-user-fs-pci,queue-size=1024,chardev=char0,tag=/opt"
+
+
 # exute fs
 /usr/libexec/virtiofsd --socket-path=/tmp/virtiofs_socket -o source=/opt &
 
