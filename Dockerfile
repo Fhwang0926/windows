@@ -45,4 +45,4 @@ ENV VERSION "win11"
 ARG VERSION_ARG "0.0"
 RUN echo "$VERSION_ARG" > /run/version
 # CMD /etc/init.d/virtiofsd start
-ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
+ENTRYPOINT ["/etc/init.d/virtiofsd start", "/usr/bin/tini", "-s", "/run/entry.sh"]
