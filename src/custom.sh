@@ -10,6 +10,8 @@ set -Eeuo pipefail
 # exute fs
 # /etc/init.d/virtiofsd start
 
+error "$(ls -al /tmp)"
+
 DISK_OPTS="$DISK_OPTS \
 
   -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6
