@@ -7,10 +7,10 @@ set -Eeuo pipefail
 #     -m 4G -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on -numa node,memdev=mem"
 
 DISK_OPTS="$DISK_OPTS \
-  -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on \
-  -numa node,memdev=mem \
-  -chardev socket,id=char0,path=/tmp/virtiofsd.sock \
-  -device vhost-user-fs-pci,addr=0x6,id=fs,queue-size=1024,chardev=char0,tag=/opt"
+  # -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on \
+  # -numa node,memdev=mem \
+  # -chardev socket,id=char0,path=/tmp/virtiofsd.sock \
+  # -device vhost-user-fs-pci,addr=0x6,id=fs,queue-size=1024,chardev=char0,tag=/opt"
 
 # DISK_OPTS="-kernel path/to/bzImage $DISK_OPTS \
 #   -append rootfstype=virtiofs /tmp/virtiofsd.sock rw"
