@@ -506,7 +506,7 @@ DISK_OPTS="-kernel path/to/bzImage $DISK_OPTS \
   -append rootfstype=virtiofs /tmp/virtiofsd.sock rw"
 
 # exute fs
-echo $(/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt -o cache=none &)
+/usr/libexec/virtiofsd --socket-path=/tmp/virtiofsd.sock -o source=/opt --cache=none &
 
 
 # if [ -n "$DATA_PATH" ]; then
