@@ -9,7 +9,7 @@ RUN apt-get update \
     && apt-get --no-install-recommends -y install \
         vim net-tools iputils-ping \
         # samba \
-        virtiofsd \
+        # virtiofsd \
         curl \
         7zip \
         wimtools \
