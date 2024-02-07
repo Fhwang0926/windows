@@ -11,9 +11,9 @@ set -Eeuo pipefail
 # /etc/init.d/virtiofsd start
 
 DISK_OPTS="$DISK_OPTS \
-  -device virtio-serial \
+  -device virtio-serial,bus=pcie.0,addr=0x6 \
   -chardev socket,id=ch0,path=/tmp/vhost-socket,server=on,wait=off \
-  -device virtserialport,name=org.example.ipinfo,bus=virtio-serial.0,id=ipinfo"
+  -device virtserialport,name=org.example.ipinfo,bus=pcie.0,id=ipinfo"
 
   # -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6 \
   # -chardev socket,id=ch0,path=/tmp/vhost-socket,server,nowait \
