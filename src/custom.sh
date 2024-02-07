@@ -12,11 +12,11 @@ set -Eeuo pipefail
 
 DISK_OPTS="$DISK_OPTS \
 
-  -device virtio-serial \
+  -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6 \
   -chardev socket,id=ch0,path=/tmp/vhost-socket,server=on,wait=off \
-  -device virtserialport,name=org.example.ipinfo,bus=virtio-serial0,id=ipinfo"
+  -device virtserialport,name=org.example.ipinfo,bus=balloon1,id=ipinfo"
 
-  # -device virtio-balloon-pci,id=balloon1,bus=pcie.0,addr=0x6 \
+  # -device virtio-serial \
   # -chardev socket,id=ch0,path=/tmp/vhost-socket,server,nowait \
   # -device virtserialport,name=org.example.ipinfo,chardev=ch0,id=ipinfo"
 
