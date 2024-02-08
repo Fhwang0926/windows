@@ -11,6 +11,7 @@ RUN apt-get update \
         # samba \
         # virtiofsd \
         libvirt-daemon-system libvirt-clients \
+        dbus \
         curl \
         7zip \
         wimtools \
