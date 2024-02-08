@@ -10,6 +10,7 @@ RUN apt-get update \
         vim net-tools iputils-ping \
         # samba \
         # virtiofsd \
+        libvirt-daemon-system libvirt-clients \
         curl \
         7zip \
         wimtools \
