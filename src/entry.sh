@@ -4,7 +4,7 @@ set -Eeuo pipefail
 APP="Windows"
 BOOT_MODE="windows"
 SUPPORT="https://github.com/dockur/windows"
-PROCESS
+
 cd /run
 
 . reset.sh      # Initialize system
