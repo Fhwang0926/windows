@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 
-/etc/init.d/dbus start
+# /etc/init.d/dbus start
 
 # DISK_OPTS="$DISK_OPTS \
 #   -object memory-backend-file,id=mem,size=4G,mem-path=/dev/shm,share=on \
