@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# [[ "$DHCP" == [Yy1]* ]] && return 0
+[[ "$DHCP" == [Yy1]* ]] && return 0
 
 SHARE="$STORAGE/shared"
 
