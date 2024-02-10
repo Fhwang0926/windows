@@ -1,6 +1,6 @@
 <h1 align="center">Windows<br />
 <div align="center">
-<img src="https://github.com/dockur/windows/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
+<a href="https://github.com/dockur/windows"><img src="https://github.com/dockur/windows/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" /></a>
 </div>
 <div align="center">
 
@@ -127,6 +127,12 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
   ```
 
   Replace the example path `/var/win` with the desired storage folder.
+
+* ### How do I share files with the host?
+
+  Open File Explorer and click on the Network section, you will see a computer called `host.lan`, double-click it and it will show a folder called `Data`.
+
+  Inside this folder you can access any files that are placed in `/storage/shared` (see above) on the host.
 
 * ### How do I install a custom image?
 
