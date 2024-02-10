@@ -7,11 +7,6 @@ ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
-        vim net-tools iputils-ping \
-        # samba \
-        # virtiofsd \
-        libvirt-daemon-system libvirt-clients \
-        dbus \
         curl \
         7zip \
         wsdd \
@@ -31,16 +26,6 @@ RUN chmod +x /run/*.sh
 
 EXPOSE 8006 3389
 VOLUME /storage
-# RUN touch /tmp/virtiofsd.sock
-# RUN touch /tmp/virtiofs_socket
-# VOLUME /opt/data
-# COPY virtiofsd.sh /etc/init.d/virtiofsd
-# RUN chmod +x /etc/init.d/virtiofsd
-# RUN update-rc.d virtiofsd defaults
-
-# RUN mkdir -p /opt/data
-# RUN qemu-img create /opt/data/file.img 10G
-# RUN echo -e /opt/data *\(rw,sync,no_subtree_check\) >> /etc/exports
 
 ENV RAM_SIZE "4G"
 ENV CPU_CORES "2"
@@ -49,7 +34,5 @@ ENV VERSION "win11"
 
 ARG VERSION_ARG "0.0"
 RUN echo "$VERSION_ARG" > /run/version
-# CMD /etc/init.d/virtiofsd start
-# && /run/custom.sh
-# ENTRYPOINT ["/usr/bin/tini", "--", "bash", "-c", "/run/entry.sh && /run/custom.sh"]
+
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
