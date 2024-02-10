@@ -20,7 +20,8 @@ DEV_OPTS="$DEV_OPTS -device virtio-rng-pci,rng=objrng0,id=rng0,bus=pcie.0,addr=0
 DEV_OPTS="$DEV_OPTS \
   -chardev socket,path=/tmp/qga.sock,server=on,wait=off,id=qga0 \
   -device virtio-serial \
-  -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0"
+  -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
+  -qmp tcp:localhost:4444,server "
 
 ARGS="$DEF_OPTS $CPU_OPTS $RAM_OPTS $MAC_OPTS $DISPLAY_OPTS $MON_OPTS $SERIAL_OPTS $USB_OPTS $NET_OPTS $DISK_OPTS $BOOT_OPTS $DEV_OPTS $ARGUMENTS"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
