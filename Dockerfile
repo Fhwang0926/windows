@@ -14,7 +14,10 @@ RUN apt-get update \
         dbus \
         curl \
         7zip \
+        wsdd \
+        samba \
         wimtools \
+        dos2unix \
         cabextract \
         genisoimage \
         libxml2-utils \

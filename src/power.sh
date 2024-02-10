@@ -22,6 +22,29 @@ _trap() {
   done
 }
 
+ready() {
+
+  [ -f "$STORAGE/windows.boot" ] && return 0
+  [ ! -f "$QEMU_PTY" ] && return 1
+
+  if [ -f "$STORAGE/windows.old" ]; then
+    local last
+    local bios="Booting from Hard"
+    last=$(grep "^Booting.*" "$QEMU_PTY" | tail -1)
+    if [[ "${last,,}" == "${bios,,}"* ]]; then
+      return 0
+    fi
+    return 1
+  fi
+
+  local line="Windows Boot Manager"
+  if grep -Fq "$line" "$QEMU_PTY"; then
+    return 0
+  fi
+
+  return 1
+}
+
 finish() {
 
   local pid
@@ -40,8 +63,19 @@ finish() {
     done
   fi
 
+  if [ ! -f "$STORAGE/windows.boot" ] && [ -f "$STORAGE/$BASE" ]; then
+    # Remove CD-ROM ISO after install
+    if ready; then
+      rm -f "$STORAGE/$BASE"
+      touch "$STORAGE/windows.boot"
+    fi
+  fi
+
   pid="/var/run/tpm.pid"
   [ -f "$pid" ] && pKill "$(<"$pid")"
+
+  fKill "wsdd"
+  fKill "smbd"
 
   closeNetwork
 
@@ -118,17 +152,9 @@ _graceful_shutdown() {
     finish "$code" && return "$code"
   fi
 
-  local remove_iso=""
-
-  if [ ! -f "$STORAGE/windows.old" ]; then
-    if [ ! -f "$STORAGE/windows.boot" ] && [ -f "$QEMU_PTY" ]; then
-      if grep -Fq "Windows Boot Manager" "$QEMU_PTY"; then
-        [ -f "$STORAGE/$BASE" ] && remove_iso="y"
-      else
-        info "Cannot send ACPI signal during Windows setup, aborting..."
-        finish "$code" && return "$code"
-      fi
-    fi
+  if ! ready; then
+    info "Cannot send ACPI signal during Windows setup, aborting..."
+    finish "$code" && return "$code"
   fi
 
   # Send ACPI shutdown signal
@@ -153,11 +179,6 @@ _graceful_shutdown() {
 
   if [ "$cnt" -ge "$QEMU_TIMEOUT" ]; then
     error "Shutdown timeout reached, aborting..."
-  else
-    if [ -n "$remove_iso" ]; then
-      rm -f "$STORAGE/$BASE"
-      touch "$STORAGE/windows.boot"
-    fi
   fi
 
   finish "$code" && return "$code"

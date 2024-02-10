@@ -16,7 +16,7 @@ echo disk.sh init
 . display.sh    # Initialize graphics
 echo display.sh init
 . network.sh    # Initialize network
-echo network.sh init
+. samba.sh      # Configure samba
 . boot.sh       # Configure boot
 echo boot.sh init
 . proc.sh       # Initialize processor
