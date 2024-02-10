@@ -7,6 +7,9 @@ SUPPORT="https://github.com/dockur/windows"
 
 cd /run
 
+PROCESS="${APP,,}"
+PROCESS="${PROCESS// /-}"
+
 . reset.sh      # Initialize system
 . install.sh    # Run installation
 . disk.sh       # Initialize disks
