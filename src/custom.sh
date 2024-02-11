@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 : "${CUSTOM_OPTS:=""}"
 : "${CUSTOM_SCRIPT:="N"}"
+: "${USER_DATA:="N"}"
 : "${WIN_IP:=""}"
 
 # here is custom script for auto setting
