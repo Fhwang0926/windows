@@ -249,33 +249,35 @@ configureSMBLocal () {
   } | unix2dos > "$SHARE/readme.txt"
 
   # set ip configuration
-  {
-    echo "@echo off"
-    echo "SETLOCAL ENABLEDELAYEDEXPANSION"
+  # {
+  #   echo "@echo off"
+  #   echo "SETLOCAL ENABLEDELAYEDEXPANSION"
 
-    echo ":: 네트워크 인터페이스 목록을 조회하고 마지막 인터페이스 이름을 찾습니다."
-    echo "FOR /F "tokens=4 delims=: " %%i IN ('netsh interface show interface ^| findstr /R /C:"^.*연결"') DO ("
-    echo "    SET LAST_INTERFACE=%%i"
-    echo ")"
+  #   echo ":: 네트워크 인터페이스 목록을 조회하고 마지막 인터페이스 이름을 찾습니다."
+  #   echo "FOR /F "tokens=4 delims=: " %%i IN ('netsh interface show interface ^| findstr /R /C:"^.*연결"') DO ("
+  #   echo "    SET LAST_INTERFACE=%%i"
+  #   echo ")"
 
-    echo ":: 마지막 인터페이스에 IP 주소, 서브넷 마스크, 게이트웨이 설정"
-    echo "IF NOT "!LAST_INTERFACE!"=="" ("
-    echo "    netsh interface ip set address name="!LAST_INTERFACE!" static 10.20.0.30 255.255.255.0 10.20.0.1"
-    echo "    :: DNS 서버 주소가 필요한 경우 아래 줄의 주석을 해제하고 사용"
-    echo "    :: netsh interface ip set dns name="!LAST_INTERFACE!" static 8.8.8.8"
+  #   echo ":: 마지막 인터페이스에 IP 주소, 서브넷 마스크, 게이트웨이 설정"
+  #   echo "IF NOT "!LAST_INTERFACE!"=="" ("
+  #   echo "    netsh interface ip set address name="!LAST_INTERFACE!" static 10.20.0.30 255.255.255.0 10.20.0.1"
+  #   echo "    :: DNS 서버 주소가 필요한 경우 아래 줄의 주석을 해제하고 사용"
+  #   echo "    :: netsh interface ip set dns name="!LAST_INTERFACE!" static 8.8.8.8"
 
-    echo "    echo 네트워크 설정이 적용된 인터페이스: !LAST_INTERFACE!"
-    echo ") ELSE ("
-    echo "    echo 사용 가능한 네트워크 인터페이스를 찾을 수 없습니다."
-    echo ")"
-    echo "pause"
-    echo ""
-  } | unix2dos > "$SHARE/auto_ip.bat"
+  #   echo "    echo 네트워크 설정이 적용된 인터페이스: !LAST_INTERFACE!"
+  #   echo ") ELSE ("
+  #   echo "    echo 사용 가능한 네트워크 인터페이스를 찾을 수 없습니다."
+  #   echo ")"
+  #   echo "pause"
+  #   echo ""
+  # } | unix2dos > "$SHARE/auto_ip.bat"
 
+  info starting smbd
   smbd -D
   info started smbd
 
-  wsdd -i dockerbridge -p -n "host.lan" &
+  info starting wsdd
+  bash -c wsdd -i dockerbridge -p -n "host.lan"
   info started wsdd
 }
 
