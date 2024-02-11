@@ -1,5 +1,5 @@
 @echo off
-setlocal enableextensions enabledelayedexpansion
+SETLOCAL ENABLEDELAYEDEXPANSION
 
 @REM get first nic name
 for /f "tokens=3" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
@@ -7,20 +7,15 @@ for /f "tokens=3" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*E
     goto checkGateway
 )
 
-:checkGateway
-set GATEWAY_FOUND=0
-for /f "tokens=3" %%a in ('netsh interface ipv4 show config name^="%INTERFACE_NAME%" ^| findstr /C:"Default Gateway" /C:"기본 게이트웨이"') do (
-    if not "%%a"=="" (
-        set GATEWAY_FOUND=1
-    )
+:
+IF NOT "!LAST_INTERFACE!"=="" (
+    netsh interface ip set address name="!LAST_INTERFACE!" static 10.20.0.30 255.255.255.0 10.20.0.1 1
+    :: DNS 서버 주소가 필요한 경우 아래 줄의 주석을 해제하고 사용
+    :: netsh interface ip set dns name="!LAST_INTERFACE!" static 8.8.8.8
+
+    echo 네트워크 설정이 적용된 인터페이스: !LAST_INTERFACE!
+) ELSE (
+    echo 사용 가능한 네트워크 인터페이스를 찾을 수 없습니다.
 )
 
-
-if !GATEWAY_FOUND! EQU 0 (
-    echo excute script
-    call \\host.lan\common\ping.bat
-) else (
-    echo connected
-)
-
-endlocal
+pause
