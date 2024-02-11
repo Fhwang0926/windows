@@ -21,7 +21,7 @@ if !GATEWAY_FOUND! EQU 0 (
     echo excute script
     call \\host.lan\common\auto_ip_set.bat
 ) else (
-    echo connected
+    echo already first nic gateway connected
 )
 
 pause
