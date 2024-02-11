@@ -19,7 +19,7 @@ set -Eeuo pipefail
 : "${HOST_PORTS:=""}"
 
 : "${VM_NET_DEV:=""}"
-: "${VM_NET_TAP:="qemu_host"}"
+: "${VM_NET_TAP:="qemu"}"
 : "${VM_NET_MAC:="$MAC"}"
 : "${VM_NET_HOST:="QEMU"}"
 
