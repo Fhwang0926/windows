@@ -27,6 +27,7 @@ set -Eeuo pipefail
 : "${DNSMASQ:="/usr/sbin/dnsmasq"}"
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 
+VM_NET_TAP="qemu_host"
 ADD_ERR="Please add the following setting to your container:"
 
 # ######################################
