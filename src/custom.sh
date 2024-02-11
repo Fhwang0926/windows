@@ -2,6 +2,7 @@
 set -Eeuo pipefail
 
 : "${CUSTOM_OPTS:=""}"
+: "${CUSTOM:="n"}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
@@ -148,8 +149,8 @@ closeNetworkCustom() {
   ip link set "$VM_NET_TAP" down promisc off || true
   ip link delete "$VM_NET_TAP" || true
 
-  ip link set dockerbridge down || true
-  ip link delete dockerbridge || true
+  # ip link set dockerbridge down || true
+  # ip link delete dockerbridge || true
 
   return 0
 }
