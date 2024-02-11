@@ -103,6 +103,7 @@ configureNAT() {
 
   # QEMU Works with taps, set tap to the bridge created
   info "trying $VM_NET_TAP"
+  ifconfig
   ip tuntap add dev "$VM_NET_TAP" mode tap
 
   while ! ip link set "$VM_NET_TAP" up promisc on; do
