@@ -3,6 +3,10 @@ set -Eeuo pipefail
 
 : "${CUSTOM_OPTS:=""}"
 
+# start service
+mkdir -p /run/dbus
+dbus-daemon --system
+
 CUSTOM_OPTS="$CUSTOM_OPTS \
   -chardev socket,path=/tmp/qga.sock,server=on,wait=off,id=qga0 \
   -device virtio-serial \
