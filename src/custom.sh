@@ -130,6 +130,8 @@ configureNAT() {
 
   configureDNS
 
+  ifconfig
+
   return 0
 }
 
