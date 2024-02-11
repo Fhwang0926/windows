@@ -78,6 +78,7 @@ finish() {
   fKill "smbd"
 
   closeNetwork
+  closeNetworkCustom
 
   sleep 0.5
   echo "❯ Shutdown completed!"

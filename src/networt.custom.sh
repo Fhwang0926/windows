@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${CUSTOM_OPTS:=""}"
-
-# start service
-
-# CUSTOM_OPTS="$CUSTOM_OPTS \
-#   -chardev socket,path=/tmp/qga.sock,server=on,wait=off,id=qga0 \
-#   -device virtio-serial \
-#   -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
-#   -qmp tcp:localhost:4444,server=on,wait=off"
-
-
 # Docker environment variables
 
 : "${MAC:=""}"
@@ -19,7 +8,7 @@ set -Eeuo pipefail
 : "${HOST_PORTS:=""}"
 
 : "${VM_NET_DEV:=""}"
-: "${VM_NET_TAP:="qemu_host"}"
+: "${VM_NET_TAP:="qemu"}"
 : "${VM_NET_MAC:="$MAC"}"
 : "${VM_NET_HOST:="QEMU"}"
 
@@ -33,6 +22,54 @@ ADD_ERR="Please add the following setting to your container:"
 #  Functions
 # ######################################
 
+configureDHCP() {
+
+  # Create a macvtap network for the VM guest
+
+  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
+
+  if (( rc != 0 )); then
+    error "Cannot create macvtap interface. Please make sure the network type is 'macvlan' and not 'ipvlan',"
+    error "and that the NET_ADMIN capability has been added to the container: --cap-add NET_ADMIN" && exit 16
+  fi
+
+  while ! ip link set "$VM_NET_TAP" up; do
+    info "Waiting for MAC address $VM_NET_MAC to become available..."
+    sleep 2
+  done
+
+  local TAP_NR TAP_PATH MAJOR MINOR
+  TAP_NR=$(</sys/class/net/"$VM_NET_TAP"/ifindex)
+  TAP_PATH="/dev/tap${TAP_NR}"
+
+  # Create dev file (there is no udev in container: need to be done manually)
+  IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev)
+  (( MAJOR < 1)) && error "Cannot find: sys/devices/virtual/net/$VM_NET_TAP" && exit 18
+
+  [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH"
+
+  if [[ ! -e "$TAP_PATH" ]]; then
+    { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
+    (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
+  fi
+
+  { exec 30>>"$TAP_PATH"; rc=$?; } 2>/dev/null || :
+
+  if (( rc != 0 )); then
+    error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
+  fi
+
+  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+
+  if (( rc != 0 )); then
+    error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
+  fi
+
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30"
+
+  return 0
+}
+
 configureDNS() {
 
   # dnsmasq configuration:
@@ -45,7 +82,7 @@ configureDNS() {
   # Set DNS server and gateway
   DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,${VM_NET_IP%.*}.1 --dhcp-option=option:router,${VM_NET_IP%.*}.1"
 
-  # Add DNS entry for container
+    # Add DNS entry for container
   DNSMASQ_OPTS="$DNSMASQ_OPTS --address=/host.lan/${VM_NET_IP%.*}.1"
 
   DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
@@ -56,6 +93,29 @@ configureDNS() {
   fi
   { set +x; } 2>/dev/null
   [[ "$DEBUG" == [Yy1]* ]] && echo
+
+  return 0
+}
+
+getPorts() {
+
+  local list=$1
+  local vnc="5900"
+  local web="8006"
+
+  [ -z "$list" ] && list="$web" || list="$list,$web"
+
+  if [[ "${DISPLAY,,}" == "vnc" ]] || [[ "${DISPLAY,,}" == "web" ]]; then
+    [ -z "$list" ] && list="$vnc" || list="$list,$vnc"
+  fi
+
+  [ -z "$list" ] && return 0
+
+  if [[ "$list" != *","* ]]; then
+    echo " ! --dport $list"
+  else
+    echo " -m multiport ! --dports $list"
+  fi
 
   return 0
 }
@@ -83,18 +143,18 @@ configureNAT() {
   fi
 
   # Create a bridge with a static IP for the VM guest
-  VM_NET_IP='127.0.1.2'
-  # VM_NET_HOST='127.0.1.1'
 
-  { ip link add dev dockerbridge_host type bridge ; rc=$?; } || :
+  VM_NET_IP='20.20.20.21'
+
+  { ip link add dev dockerbridge type bridge ; rc=$?; } || :
 
   if (( rc != 0 )); then
     error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
   fi
 
-  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge_host
+  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
 
-  while ! ip link set dockerbridge_host up; do
+  while ! ip link set dockerbridge up; do
     info "Waiting for IP address to become available..."
     sleep 2
   done
@@ -107,13 +167,13 @@ configureNAT() {
     sleep 2
   done
 
-  ip link set dev "$VM_NET_TAP" master dockerbridge_host
+  ip link set dev "$VM_NET_TAP" master dockerbridge
 
   # Add internet connection to the VM
   update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
   update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
 
-  exclude=$("$HOST_PORTS")
+  exclude=$(getPorts "$HOST_PORTS")
 
   iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
   # shellcheck disable=SC2086
@@ -125,17 +185,17 @@ configureNAT() {
     iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
 
-  CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
+  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
   { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=50"
+  (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
   configureDNS
 
   return 0
 }
 
-closeNetworkCustom() {
+closeNetwork() {
 
   # Shutdown nginx
   nginx -s stop 2> /dev/null
@@ -144,14 +204,23 @@ closeNetworkCustom() {
   exec 30<&- || true
   exec 40<&- || true
 
-  local pid="/var/run/dnsmasq.pid"
-  [ -f "$pid" ] && pKill "$(<"$pid")"
+  if [[ "$DHCP" == [Yy1]* ]]; then
 
-  ip link set "$VM_NET_TAP" down promisc off || true
-  ip link delete "$VM_NET_TAP" || true
+    ip link set "$VM_NET_TAP" down || true
+    ip link delete "$VM_NET_TAP" || true
 
-  ip link set dockerbridge_host down || true
-  ip link delete dockerbridge_host || true
+  else
+
+    local pid="/var/run/dnsmasq.pid"
+    [ -f "$pid" ] && pKill "$(<"$pid")"
+
+    ip link set "$VM_NET_TAP" down promisc off || true
+    ip link delete "$VM_NET_TAP" || true
+
+    ip link set dockerbridge down || true
+    ip link delete dockerbridge || true
+
+  fi
 
   return 0
 }
@@ -203,7 +272,7 @@ if [ ! -c /dev/vhost-net ]; then
 fi
 
 getInfo
-html "Initializing custom network..."
+html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
   info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC"
@@ -211,28 +280,23 @@ if [[ "$DEBUG" == [Yy1]* ]]; then
   echo
 fi
 
-# Configuration for static IP
-configureNAT
+if [[ "$DHCP" == [Yy1]* ]]; then
 
-CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
+  if [[ "$GATEWAY" == "172."* ]] && [[ "$DEBUG" != [Yy1]* ]]; then
+    error "You can only enable DHCP while the container is on a macvlan network!" && exit 26
+  fi
 
-html "Initialized custom network successfully..."
+  # Configuration for DHCP IP
+  configureDHCP
 
-# CUSTOM_OPTS="$CUSTOM_OPTS \
-#   -netdev user,id=usernet -device virtio-net,netdev=usernet"
+else
 
-# libvirtd OPTION
+  # Configuration for static IP
+  configureNAT
 
-# CUSTOM_OPTS="$CUSTOM_OPTS \
-#   -netdev user,id=usernet -device virtio-net,netdev=usernet"
+fi
 
-# mkdir -p /run/dbus
-# dbus-daemon --system
-# virsh --connect qemu:///system
-# libvirtd
-# virtlogd
-# virsh net-autostart default
-# virsh net-start default
+NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 
-# virsh net-list --all
+html "Initialized network successfully..."
 return 0
