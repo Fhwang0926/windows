@@ -22,8 +22,9 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN mkdir -p /utils
 COPY ./src /run/
-COPY ./utils /storage/shared
+COPY ./utils/*.bat /utils/
 COPY ./assets /run/assets
 ADD https://github.com/qemus/virtiso/releases/download/v0.1.240/virtio-win-0.1.240.iso /run/drivers.iso
 RUN chmod +x /run/*.sh

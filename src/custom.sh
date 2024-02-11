@@ -197,7 +197,7 @@ getInfo() {
 
 configureSMBLocal () {
 
-  SHARE="$STORAGE/shared"
+  SHARE="/utils"
 
   mkdir -p "$SHARE"
   chmod -R 777 "$SHARE"
