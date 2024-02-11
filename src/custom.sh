@@ -79,7 +79,7 @@ configureNAT() {
   fi
 
   # Create a bridge with a static IP for the VM guest
-  VM_NET_IP='20.20.20.21'
+  VM_NET_IP='127.0.1.11'
   # VM_NET_HOST='127.0.1.1'
 
   { ip link add dev dockerbridge type bridge ; rc=$?; } || :
@@ -273,13 +273,13 @@ configureSMBLocal () {
     echo ""
   } | unix2dos > "$SHARE/auto_ip.bat"
 
-  info starting smbd
+  info "starting smbd"
   smbd -D
-  info started smbd
+  info "started smbd"
 
-  info starting wsdd
+  info "starting wsdd"
   wsdd -i dockerbridge -p -n "host.lan" & 
-  info started wsdd
+  info "started wsdd"
 }
 
 # ######################################
