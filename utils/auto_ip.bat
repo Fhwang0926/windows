@@ -23,7 +23,7 @@ IF NOT "!INTERFACE_NAME!"=="" (
 
 set "firstAdapterFound=0"
 
-for /f "tokens=4,* delims=: " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*연결됨" /C:"^.*Connected"') do (
+for /f "tokens=3,* delims=: " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*연결됨" /C:"^.*Connected"') do (
     if "!firstAdapterFound!"=="0" (
         set "firstAdapterFound=1"
         echo pass first nic: %%j
