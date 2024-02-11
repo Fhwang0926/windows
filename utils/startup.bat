@@ -24,4 +24,4 @@ if !GATEWAY_FOUND! EQU 0 (
     echo connected
 )
 
-endlocal
+pause
