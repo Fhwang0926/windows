@@ -86,7 +86,7 @@ configureNAT() {
   VM_NET_IP='127.0.1.2'
   # VM_NET_HOST='127.0.1.1'
 
-  { ip link add dev dockerbridge_host type bridge ; rc=$?; } || :
+  { ip link add dev dockerbridge type bridge ; rc=$?; } || :
 
   if (( rc != 0 )); then
     ifconfig
@@ -94,9 +94,9 @@ configureNAT() {
     error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
   fi
 
-  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge_host
+  ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
 
-  while ! ip link set dockerbridge_host up; do
+  while ! ip link set dockerbridge up; do
     info "Waiting for IP address to become available..."
     sleep 2
   done
@@ -109,7 +109,7 @@ configureNAT() {
     sleep 2
   done
 
-  ip link set dev "$VM_NET_TAP" master dockerbridge_host
+  ip link set dev "$VM_NET_TAP" master dockerbridge
 
   # Add internet connection to the VM
   update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
@@ -152,8 +152,8 @@ closeNetworkCustom() {
   ip link set "$VM_NET_TAP" down promisc off || true
   ip link delete "$VM_NET_TAP" || true
 
-  ip link set dockerbridge_host down || true
-  ip link delete dockerbridge_host || true
+  ip link set dockerbridge down || true
+  ip link delete dockerbridge || true
 
   return 0
 }
