@@ -280,7 +280,7 @@ configureSMBLocal () {
 }
 
 # ######################################
-#  Configure Network
+#  Configure CUSTOM
 # ######################################
 
 if [ ! -c /dev/vhost-net ]; then
@@ -297,6 +297,8 @@ if [[ "$DEBUG" == [Yy1]* ]]; then
   [ -f /etc/resolv.conf ] && grep '^nameserver*' /etc/resolv.conf
   echo
 fi
+
+echo $CUSTOM
 
 if [[ "$CUSTOM" == [Yy1]* ]]; then
   # Configuration for static IP
