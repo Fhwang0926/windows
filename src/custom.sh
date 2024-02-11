@@ -275,7 +275,7 @@ configureSMBLocal () {
     echo "    goto checkGateway"
     echo ")"
     echo ""
-    echo ":setAddress"
+    echo ""
     echo "IF NOT "!INTERFACE_NAME!"=="" ("
     echo "    netsh interface ip set address name="!INTERFACE_NAME!" static 10.20.0.30 255.255.255.0 10.20.0.1 1"
     echo "    netsh interface ip set dns name="!INTERFACE_NAME!" static 8.8.8.8"
