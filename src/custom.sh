@@ -131,8 +131,7 @@ configureNAT() {
   fi
 
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
-  cp /dev/vhost-net /dev/vhost-net-host
-  { exec 50>>/dev/vhost-net-host; rc=$?; } 2>/dev/null || :
+  { exec 50>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=50"
 
   configureDNS
