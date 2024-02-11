@@ -1,6 +1,8 @@
 @echo off
 SETLOCAL ENABLEDELAYEDEXPANSION
 
+ping 1.1.1.1 -n 5
+
 @REM get first nic name
 for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
     set INTERFACE_NAME=%%i
@@ -31,6 +33,8 @@ for /f "tokens=4,* delims=: " %%i in ('netsh interface show interface ^| findstr
     )
 )
 
-echo complete
+@REM cls
+
+echo nic configuration complete
 
 pause
