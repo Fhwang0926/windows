@@ -278,7 +278,7 @@ configureSMBLocal () {
   info started smbd
 
   info starting wsdd
-  bash -c "wsdd -i dockerbridge -p -n \"host.lan\""
+  wsdd -i dockerbridge -p -n "host.lan" & 
   info started wsdd
 }
 
