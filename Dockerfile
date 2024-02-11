@@ -9,6 +9,7 @@ RUN apt-get update \
     && apt-get --no-install-recommends -y install \
         bridge-utils virtinst libvirt-daemon virt-manager libvirt-clients \
         curl iputils-ping net-tools dbus \
+        libvirt-daemon-system policykit-1 \
         vim \
         7zip \
         wsdd \
