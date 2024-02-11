@@ -298,7 +298,7 @@ if [[ "$DEBUG" == [Yy1]* ]]; then
   echo
 fi
 
-echo $CUSTOM
+error "CUSTOM : $CUSTOM"
 
 if [[ "$CUSTOM" == [Yy1]* ]]; then
   # Configuration for static IP
