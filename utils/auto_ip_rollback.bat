@@ -18,6 +18,11 @@ IF NOT "!INTERFACE_NAME!"=="" (
     echo not found nic !INTERFACE_NAME!
 )
 
+@REM cls
+
 echo nic rollback complete
+
+echo .
+echo .
 
 pause

@@ -24,4 +24,9 @@ if !GATEWAY_FOUND! EQU 0 (
     echo already first nic gateway connected
 )
 
+@REM cls
+
+echo .
+echo .
+
 pause
