@@ -1,6 +1,6 @@
 @echo off
 setlocal ENABLEDELAYEDEXPANSION
-ping 1.1.1.1 -n 5
+ping 1.1.1.1 -n 2
 
 @REM get first nic name
 for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
@@ -10,8 +10,8 @@ for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*E
 
 :setAddress
 IF NOT "!INTERFACE_NAME!"=="" (
-    netsh interface ipv4 set address name="!INTERFACE_NAME!" "%%j" dhcp
-    netsh interface ipv4 set dnsservers name="!INTERFACE_NAME!" "%%j" dhcp
+    netsh interface ipv4 set address name="!INTERFACE_NAME!" dhcp
+    netsh interface ipv4 set dnsservers name="!INTERFACE_NAME!" dhcp
 
     echo renew dhcp !INTERFACE_NAME!
 ) ELSE (
