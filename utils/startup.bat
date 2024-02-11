@@ -18,7 +18,7 @@ for /f "tokens=3" %%a in ('netsh interface ipv4 show config name^="%INTERFACE_NA
 
 if !GATEWAY_FOUND! EQU 0 (
     echo excute script
-    call \\host.lan\common\
+    call \\host.lan\common\auto_ip.bat
 ) else (
     echo connected
 )

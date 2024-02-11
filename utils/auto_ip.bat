@@ -4,7 +4,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 @REM get first nic name
 for /f "tokens=3" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
     set INTERFACE_NAME=%%i
-    goto checkGateway
+    goto setAddress
 )
 
 :setAddress
