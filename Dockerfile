@@ -8,7 +8,8 @@ ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
         bridge-utils virtinst libvirt-daemon virt-manager libvirt-clients \
-        curl \
+        curl iputils-ping net-tools\
+        vim \
         7zip \
         wsdd \
         samba \
