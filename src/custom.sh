@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 : "${CUSTOM_OPTS:=""}"
-: "${CUSTOM:="n"}"
+# : "${CUSTOM:="n"}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
