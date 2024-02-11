@@ -19,4 +19,19 @@ IF NOT "!INTERFACE_NAME!"=="" (
 
 @REM all disabled
 
+:: 첫 번째 어댑터를 제외하고 나머지 모든 어댑터 비활성화
+set "firstAdapterFound=0"
+
+for /f "tokens=4,* delims=: " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*연결됨" /C:"^.*Connected"') do (
+    if "!firstAdapterFound!"=="0" (
+        set "firstAdapterFound=1"
+        echo pass first nic: %%j
+    ) else (
+        echo disable nic: %%j
+        netsh interface set interface "%%j" admin=disable
+    )
+)
+
+echo complete
+
 pause
