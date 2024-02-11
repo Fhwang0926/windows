@@ -1,6 +1,5 @@
 @echo off
-SETLOCAL ENABLEDELAYEDEXPANSION
-
+setlocal ENABLEDELAYEDEXPANSION
 ping 1.1.1.1 -n 5
 
 @REM get first nic name
