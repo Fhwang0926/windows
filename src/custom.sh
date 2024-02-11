@@ -218,6 +218,8 @@ configureNAT
 
 CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
 
+info "$CUSTOM_OPTS"
+
 html "Initialized custom network successfully..."
 
 # CUSTOM_OPTS="$CUSTOM_OPTS \
