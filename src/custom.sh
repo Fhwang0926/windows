@@ -171,7 +171,7 @@ getInfo() {
 
   if [ -z "$MAC" ]; then
     # Generate MAC address based on Docker container ID in hostname
-    MAC=$(echo "$HOST" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+    MAC=$(echo "$HOST""$(date)" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
   fi
 
   VM_NET_MAC="${MAC^^}"
