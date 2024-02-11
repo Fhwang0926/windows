@@ -291,7 +291,7 @@ configureSMBLocal () {
 
   {
     echo "ping 1.1.1.1 -n 3"
-  } | unix2dos > "$SHARE/auto_ip.bat"
+  } | unix2dos > "$SHARE/ping.bat"
 
   info "starting smbd"
   smbd -D
