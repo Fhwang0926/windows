@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 : "${CUSTOM_OPTS:=""}"
-# : "${CUSTOM:="n"}"
+: "${CUSTOM_SCRIPT:="N"}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
@@ -298,9 +298,9 @@ if [[ "$DEBUG" == [Yy1]* ]]; then
   echo
 fi
 
-error "CUSTOM : $CUSTOM"
+info "CUSTOM_SCRIPT : $CUSTOM_SCRIPT"
 
-if [[ "$CUSTOM" == [Yy1]* ]]; then
+if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
   # Configuration for static IP
   configureNAT
 
