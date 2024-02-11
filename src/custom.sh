@@ -89,6 +89,8 @@ configureNAT() {
   { ip link add dev dockerbridge_host type bridge ; rc=$?; } || :
 
   if (( rc != 0 )); then
+    ifconfig
+    error "ret : $rc"
     error "Failed to create bridge. $ADD_ERR --cap-add NET_ADMIN" && exit 23
   fi
 
