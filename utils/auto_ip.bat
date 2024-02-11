@@ -17,4 +17,6 @@ IF NOT "!INTERFACE_NAME!"=="" (
     echo not found nic !INTERFACE_NAME!
 )
 
+@REM all disabled
+
 pause
