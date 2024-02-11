@@ -57,12 +57,7 @@ SAMBA="/etc/samba/smb.conf"
         echo ""
 } | unix2dos > "$SHARE/readme.txt"
 
-info starting smbd
 smbd -D
-info started smbd
-
-info starting wsdd
 wsdd -i dockerbridge -p -n "host.lan" &
-info started wsdd
 
 return 0
