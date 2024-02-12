@@ -289,8 +289,8 @@ configureSMBLocal () {
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
   WIN_GW=${WIN_IP%.*}.1
-  sed "s/WIN_IP/$WIN_IP/g" $SHARE/auto_ip_set.bat > $SHARE/auto_ip_set.bat
-  sed "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set.bat > $SHARE/auto_ip_set.bat
+  sed -i "s/WIN_IP/$WIN_IP/g" $SHARE/auto_ip_set.bat
+  sed -i "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set.bat
 
   {
     echo "ping 1.1.1.1 -n 3"
