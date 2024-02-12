@@ -1,5 +1,6 @@
 FROM scratch
-COPY --from=qemux/qemu-docker:latest / /
+# COPY --from=qemux/qemu-docker:latest / /
+COPY --from=harbor.donghwa.dev:4443/seo/qemu-docker:latest / /
 
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND "noninteractive"
