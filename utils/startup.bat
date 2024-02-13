@@ -8,25 +8,42 @@ for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*E
 )
 
 :checkGateway
-set GATEWAY_FOUND=0
+set has_gateway=0
+set count=0
 for /f "tokens=2" %%a in ('netsh interface ipv4 show config name^="%INTERFACE_NAME%" ^| findstr /C:"Default Gateway" /C:"기본 게이트웨이"') do (
+    set /a count+=1
     echo %%a
     if not "%%a"=="" (
-        set GATEWAY_FOUND=1
+        set has_gateway=1
     )
-)
-
-
-if !GATEWAY_FOUND! EQU 0 (
-    echo excute script
-    call \\host.lan\common\auto_ip_set.bat
-) else (
-    echo already first nic gateway connected
 )
 
 @REM cls
 
-echo .
-echo .
+@REM if !count! EQU 1 (
+@REM     echo already actived
+@REM     goto :eof
+@REM ) else (
+@REM     echo continue network setting
+@REM )
+
+if !has_gateway! EQU 0 (
+    echo excute script
+    @REM net use Z: /delete /y
+    net use Z: \\host.lan\common /persistent:yes
+    echo connected host.lan
+
+    call Z:\auto_ip_set.bat
+) else (
+    echo already first nic gateway connected
+)
+
+net use Z: /delete /y
+
+ipconfig
 
 pause
+
+:end
+endlocal
+

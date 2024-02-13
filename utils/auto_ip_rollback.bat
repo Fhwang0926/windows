@@ -22,6 +22,8 @@ IF NOT "!INTERFACE_NAME!"=="" (
 
 echo nic rollback complete
 
+ipconfig
+
 echo .
 echo .
 

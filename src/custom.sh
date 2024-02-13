@@ -244,53 +244,14 @@ configureSMBLocal () {
     }  > "$SAMBA"
   fi
 
-  # {      echo "--------------------------------------------------------" 
-  #         echo " $APP for Docker v$(</run/version)..."
-  #         echo " For support visit $SUPPORT"
-  #         echo "--------------------------------------------------------"
-  #         echo ""
-  #         echo "Using this folder you can share files with the host machine."
-  #         echo ""
-  #         echo "To change the storage location, include the following bind mount in your compose file:"
-  #         echo ""
-  #         echo "  volumes:"
-  #         echo "    - \"/home/user/example:/storage/shared\""
-  #         echo ""
-  #         echo "Or in your run command:"
-  #         echo ""
-  #         echo "  -v \"/home/user/example:/storage/shared\""
-  #         echo ""
-  #         echo "Replace the example path /home/user/example with the desired storage folder."
-  #         echo ""
-  # } | unix2dos > "$SHARE/readme.txt"
-
-  # set ip configuration
-  # {
-  #   echo "@echo off"
-  #   echo "SETLOCAL ENABLEDELAYEDEXPANSION"
-  #   echo ""
-  #   echo "@REM get first nic name"
-  #   echo "for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do ("
-  #   echo "    set INTERFACE_NAME=%%i"
-  #   echo "    goto checkGateway"
-  #   echo ")"
-  #   echo ""
-  #   echo ""
-  #   echo "IF NOT "!INTERFACE_NAME!"=="" ("
-  #   echo "    netsh interface ip set address name="!INTERFACE_NAME!" static {$WIN_IP} 255.255.255.0 ${WIN_IP%.*}.1"
-  #   echo "    netsh interface ip set dns name="!INTERFACE_NAME!" static 8.8.8.8"
-  #   echo ""
-  #   echo "    echo renew !INTERFACE_NAME!"
-  #   echo ") ELSE ("
-  #   echo "    echo not found nic !INTERFACE_NAME!"
-  #   echo ")"
-  #   echo ""
-  #   echo "pause"
-
   # } | unix2dos > "$SHARE/auto_ip.bat"
   WIN_GW=${WIN_IP%.*}.1
   sed -i "s/WIN_IP/$WIN_IP/g" $SHARE/auto_ip_set.bat
   sed -i "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set.bat
+
+  cat $SHARE/auto_ip_rollback.bat | unix2dos > "$SHARE/auto_ip_rollback.bat"
+  cat $SHARE/startup.bat | unix2dos > "$SHARE/startup.bat"
+  cat $SHARE/auto_ip_set.bat | unix2dos > "$SHARE/auto_ip_set.bat"
 
   {
     echo "ping 1.1.1.1 -n 3"
