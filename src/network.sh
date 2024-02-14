@@ -19,6 +19,7 @@ set -Eeuo pipefail
 # multi instance
 
 : "${FD:="30"}"
+: "${NET:="/dev/vhost-net-$FD"}"
 
 ADD_ERR="Please add the following setting to your container:"
 
@@ -67,10 +68,10 @@ configureDHCP() {
   VHOST_FD=$((FD + 1))
   info "default VHOST_FD : $VHOST_FD"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
+  { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
-    error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
+    error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
@@ -198,7 +199,7 @@ configureNAT() {
 
   NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  { exec 40>> "$NET"; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
   configureDNS
