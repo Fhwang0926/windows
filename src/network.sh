@@ -68,13 +68,14 @@ configureDHCP() {
   VHOST_FD=$((FD + 1))
   info "default VHOST_FD : $VHOST_FD, NET : $NET"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
+  # { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
+  { exec 22>>$NET; rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=22,fd=$FD"
   # FD=$((VHOST_FD + 1))
 
   return 0
