@@ -18,7 +18,7 @@ set -Eeuo pipefail
 
 # multi instance
 
-: "${fd:="30"}"
+: "${FD:="30"}"
 
 ADD_ERR="Please add the following setting to your container:"
 
@@ -69,8 +69,9 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  vhostfd=$((fd + 10))
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$vhostfd,fd=$fd"
+  VHOST_FD=$((FD + 10))
+  info "VHOST_FD : $VHOST_FD"
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$vhostfd,fd=$FD"
 
   return 0
 }
