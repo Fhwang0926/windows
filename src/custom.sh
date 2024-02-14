@@ -129,13 +129,14 @@ configureNAT() {
   fi
 
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
-  VHOST_FD=$((FD + 2))
+  VHOST_FD=$((FD + 1))
   info "CUSTOM VHOST_FD : $VHOST_FD"
 
   # VHOST_FD=50
   { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
   # { exec $VHOST_FD>>/dev/vhost-net; rc=$?; }
-  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD"
+  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
+  FD=$((VHOST_FD + 2))
 
   configureDNS
 
