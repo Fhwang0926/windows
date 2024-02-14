@@ -133,7 +133,7 @@ configureNAT() {
   info "VHOST_FD : $VHOST_FD"
 
   # { exec $((VHOST_FD))>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  { exec $((VHOST_FD))>>/dev/vhost-net; rc=$?; }
+  { exec {VHOST_FD} >>/dev/vhost-net; rc=$?; }
   (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD"
 
   configureDNS
