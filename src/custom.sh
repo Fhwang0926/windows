@@ -135,7 +135,7 @@ configureNAT() {
   # VHOST_FD=50
   { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
   # { exec $VHOST_FD>>/dev/vhost-net; rc=$?; }
-  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
+  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD"
   FD=$((VHOST_FD + 2))
 
   configureDNS
