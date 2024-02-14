@@ -66,7 +66,7 @@ configureDHCP() {
   fi
 
   VHOST_FD=$((FD + 1))
-  info "default VHOST_FD : $VHOST_FD"
+  info "default VHOST_FD : $VHOST_FD, NET : $NET"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
 
