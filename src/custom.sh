@@ -5,6 +5,7 @@ set -Eeuo pipefail
 : "${CUSTOM_SCRIPT:="N"}"
 : "${USER_DATA:="N"}"
 : "${WIN_IP:=""}"
+: "${VHOST_FD_CUSTOM:=""}"
 : "${NET_UUID:=""}"
 : "${FD:="50"}"
 
@@ -152,8 +153,7 @@ closeNetworkCustom() {
   fWait "nginx"
 
   # exec 30<&- || true
-  exec 50<&- || true
-
+  # exec 50<&- || true
   eval "exec $VHOST_FD_CUSTOM<&-" || true
 
   local pid="/var/run/dnsmasq.pid"
