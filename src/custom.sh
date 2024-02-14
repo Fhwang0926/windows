@@ -5,6 +5,7 @@ set -Eeuo pipefail
 : "${CUSTOM_SCRIPT:="N"}"
 : "${USER_DATA:="N"}"
 : "${WIN_IP:=""}"
+: "${NET_UUID:=""}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
@@ -174,6 +175,7 @@ getInfo() {
   # if [ -z "$MAC" ]; then
     # Generate MAC address based on Docker container ID in hostname
   MAC=$(echo "$HOST""$WIN_IP""$(date)" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+  NET_UUID=$(echo "$HOST""$WIN_IP""$(date)" | md5sum
   # fi
 
   VM_NET_MAC="${MAC^^}"
@@ -280,7 +282,7 @@ getInfo
 html "Initializing custom network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
-  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC"
+  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC, NET_UUID: $NET_UUID"
   [ -f /etc/resolv.conf ] && grep '^nameserver*' /etc/resolv.conf
   echo
 fi
