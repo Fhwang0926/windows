@@ -129,7 +129,7 @@ configureNAT() {
 
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
   { exec 50>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhostfd=50"
+  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=50"
 
   configureDNS
 

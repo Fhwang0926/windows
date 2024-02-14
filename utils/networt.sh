@@ -16,6 +16,10 @@ set -Eeuo pipefail
 : "${DNSMASQ:="/usr/sbin/dnsmasq"}"
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 
+# multi instance
+
+: "${fd:="30"}"
+
 ADD_ERR="Please add the following setting to your container:"
 
 # ######################################
@@ -65,7 +69,8 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30"
+  vhostfd=$((fd + 10))
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$vhostfd,fd=$fd"
 
   return 0
 }
