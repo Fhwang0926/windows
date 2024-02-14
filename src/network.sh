@@ -58,7 +58,7 @@ configureDHCP() {
   fi
 
   info "default FD : $FD"
-  { eval "exec $FD>>"$TAP_PATH"; rc=$?;" } 2>/dev/null || :
+  { eval "exec $FD>>"$TAP_PATH";" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
