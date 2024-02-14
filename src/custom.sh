@@ -282,7 +282,7 @@ getInfo
 html "Initializing custom network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
-  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC, NET_UUID: $NET_UUID"
+  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC"
   [ -f /etc/resolv.conf ] && grep '^nameserver*' /etc/resolv.conf
   echo
 fi
