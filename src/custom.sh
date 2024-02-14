@@ -157,8 +157,8 @@ closeNetworkCustom() {
   local pid="/var/run/dnsmasq.pid"
   [ -f "$pid" ] && pKill "$(<"$pid")"
 
-  ip link set "$VM_NET_TAP" down promisc off || true
-  ip link delete "$VM_NET_TAP" || true
+  # ip link set "$VM_NET_TAP" down promisc off || true
+  # ip link delete "$VM_NET_TAP" || true
 
   # ip link set dockerbridge down || true
   # ip link delete dockerbridge || true
