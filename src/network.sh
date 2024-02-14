@@ -72,7 +72,6 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
 
   return 0
