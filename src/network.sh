@@ -74,7 +74,7 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=22,fd=$FD"
+  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
   # FD=$((VHOST_FD + 1))
 
   return 0
