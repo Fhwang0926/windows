@@ -63,14 +63,16 @@ configureDHCP() {
     error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
   fi
 
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  VHOST_FD=$((FD + 10))
+  info "default VHOST_FD : $VHOST_FD"
+  # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
   fi
 
-  VHOST_FD=$((FD + 10))
-  info "VHOST_FD : $VHOST_FD"
+  
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$vhostfd,fd=$FD"
 
   return 0

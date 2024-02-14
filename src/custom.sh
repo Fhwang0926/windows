@@ -130,7 +130,7 @@ configureNAT() {
 
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
   VHOST_FD=$((FD + 20))
-  info "VHOST_FD : $VHOST_FD"
+  info "CUSTOM VHOST_FD : $VHOST_FD"
 
   # VHOST_FD=50
   { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
