@@ -68,8 +68,7 @@ configureDHCP() {
   VHOST_FD=$((FD + 1))
   info "default VHOST_FD : $VHOST_FD, NET : $NET"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
-  # { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
-  { exec 22>>$NET; rc=$?; } 2>/dev/null || :
+  { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
@@ -280,9 +279,9 @@ getInfo() {
 #  Configure Network
 # ######################################
 
-if [ ! -c /dev/vhost-net ]; then
-  if mknod /dev/vhost-net c 10 238; then
-    chmod 660 /dev/vhost-net
+if [ ! -c "$NET" ]; then
+  if mknod "$NET" c 10 238; then
+    chmod 660 "$NET"
   fi
 fi
 
