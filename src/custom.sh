@@ -6,6 +6,7 @@ set -Eeuo pipefail
 : "${USER_DATA:="N"}"
 : "${WIN_IP:=""}"
 : "${NET_UUID:=""}"
+: "${FD:="50"}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
@@ -130,7 +131,7 @@ configureNAT() {
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
   VHOST_FD=$((FD + 20))
   info "VHOST_FD : $VHOST_FD"
-  
+
   { exec $VHOST_FD>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD"
 
