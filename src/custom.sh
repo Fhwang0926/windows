@@ -129,14 +129,14 @@ configureNAT() {
   fi
 
   CUSTOM_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet1"
-  VHOST_FD=$((FD + 1))
-  info "CUSTOM VHOST_FD : $VHOST_FD"
+  VHOST_FD_CUSTOM=$((FD + 1))
+  info "CUSTOM VHOST_FD : $VHOST_FD_CUSTOM"
 
-  # VHOST_FD=50
-  { eval "exec $VHOST_FD>>/dev/vhost-net;" rc=$?; } 2>/dev/null || :
-  # { exec $VHOST_FD>>/dev/vhost-net; rc=$?; }
-  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD"
-  FD=$((VHOST_FD + 2))
+  # VHOST_FD_CUSTOM=50
+  { eval "exec $VHOST_FD_CUSTOM>>/dev/vhost-net-custom;" rc=$?; } 2>/dev/null || :
+  # { exec $VHOST_FD_CUSTOM>>/dev/vhost-net-custom; rc=$?; }
+  (( rc == 0 )) && CUSTOM_OPTS="$CUSTOM_OPTS,vhost=on,vhostfd=$VHOST_FD_CUSTOM"
+  # FD=$((VHOST_FD_CUSTOM + 2))
 
   configureDNS
 
@@ -154,11 +154,13 @@ closeNetworkCustom() {
   # exec 30<&- || true
   exec 50<&- || true
 
+  eval "exec $VHOST_FD_CUSTOM<&-" || true
+
   local pid="/var/run/dnsmasq.pid"
   [ -f "$pid" ] && pKill "$(<"$pid")"
 
-  # ip link set "$VM_NET_TAP" down promisc off || true
-  # ip link delete "$VM_NET_TAP" || true
+  ip link set "$VM_NET_TAP" down promisc off || true
+  ip link delete "$VM_NET_TAP" || true
 
   # ip link set dockerbridge down || true
   # ip link delete dockerbridge || true
@@ -279,9 +281,9 @@ configureSMBLocal () {
 #  Configure CUSTOM
 # ######################################
 
-if [ ! -c /dev/vhost-net ]; then
-  if mknod /dev/vhost-net c 10 238; then
-    chmod 660 /dev/vhost-net
+if [ ! -c /dev/vhost-net-custom ]; then
+  if mknod /dev/vhost-net-custom c 10 238; then
+    chmod 660 /dev/vhost-net-custom
   fi
 fi
 

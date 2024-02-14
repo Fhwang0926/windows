@@ -74,7 +74,7 @@ configureDHCP() {
   fi
 
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
-  FD=$((VHOST_FD + 1))
+  # FD=$((VHOST_FD + 1))
 
   return 0
 }
@@ -212,8 +212,10 @@ closeNetwork() {
   nginx -s stop 2> /dev/null
   fWait "nginx"
 
-  exec 30<&- || true
-  exec 40<&- || true
+  # exec 30<&- || true
+  # exec 40<&- || true
+  eval "exec $FD<&-" || true
+  eval "exec $VHOST_FD<&-" || true
 
   if [[ "$DHCP" == [Yy1]* ]]; then
 
