@@ -17,7 +17,7 @@ cd /run
 . boot.sh       # Configure boot
 . proc.sh       # Initialize processor
 . power.sh      # Configure shutdown
-. config.sh     # Configure arguments
+# . config.sh     # Configure arguments
 
 trap - ERR
 

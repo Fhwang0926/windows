@@ -1,0 +1,60 @@
+==> /var/log/kern.log <==
+xcross kernel: [5753617.291044] br-7f92faed1288: port 4(vethd0d6bde) entered blocking state
+xcross kernel: [5753617.291045] br-7f92faed1288: port 4(vethd0d6bde) entered disabled state
+xcross kernel: [5753617.291169] device vethd0d6bde entered promiscuous mode
+xcross kernel: [5753617.715323] eth0: renamed from veth262ebb4
+xcross kernel: [5753617.735550] IPv6: ADDRCONF(NETDEV_CHANGE): vethd0d6bde: link becomes ready
+xcross kernel: [5753617.735598] br-7f92faed1288: port 4(vethd0d6bde) entered blocking state
+xcross kernel: [5753617.735599] br-7f92faed1288: port 4(vethd0d6bde) entered forwarding state
+
+==> /var/log/syslog <==
+xcross dockerd[219873]: time="2024-02-14T17:46:35.253695235Z" level=warning msg="no trace recorder found, skipping"
+xcross kernel: [5753617.291044] br-7f92faed1288: port 4(vethd0d6bde) entered blocking state
+xcross kernel: [5753617.291045] br-7f92faed1288: port 4(vethd0d6bde) entered disabled state
+xcross kernel: [5753617.291169] device vethd0d6bde entered promiscuous mode
+xcross networkd-dispatcher[725]: WARNING:Unknown index 2209 seen, reloading interface list
+xcross systemd-udevd[797863]: ethtool: autonegotiation is unset or enabled, the speed and duplex are not writable.
+xcross systemd-udevd[797863]: Using default interface naming scheme 'v245'.
+xcross systemd-udevd[797863]: vethd0d6bde: Could not generate persistent MAC: No data available
+xcross systemd-udevd[797862]: ethtool: autonegotiation is unset or enabled, the speed and duplex are not writable.
+xcross systemd-udevd[797862]: Using default interface naming scheme 'v245'.
+xcross systemd-udevd[797862]: veth262ebb4: Could not generate persistent MAC: No data available
+xcross systemd-networkd[220463]: vethd0d6bde: Link UP
+xcross dockerd[219873]: time="2024-02-14T17:46:35.381946605Z" level=info msg="No non-localhost DNS nameservers are left in resolv.conf. Using default external servers: [nameserver 8.8.8.8 nameserver 8.8.4.4]"
+xcross dockerd[219873]: time="2024-02-14T17:46:35.381974717Z" level=info msg="IPv6 enabled; Adding default IPv6 external servers: [nameserver 2001:4860:4860::8888 nameserver 2001:4860:4860::8844]"
+xcross dockerd[219873]: time="2024-02-14T17:46:35.468303650Z" level=warning msg="path in container /dev/kvm already exists in privileged mode" container=ebc9c895f14e7234d5fe39a4bd523ac8e65a19c2ec6a628ce41864b772133fd9
+xcross containerd[219195]: time="2024-02-14T17:46:35.509754981Z" level=info msg="loading plugin \"io.containerd.event.v1.publisher\"..." runtime=io.containerd.runc.v2 type=io.containerd.event.v1
+xcross containerd[219195]: time="2024-02-14T17:46:35.510373050Z" level=info msg="loading plugin \"io.containerd.internal.v1.shutdown\"..." runtime=io.containerd.runc.v2 type=io.containerd.internal.v1
+xcross containerd[219195]: time="2024-02-14T17:46:35.510551201Z" level=info msg="loading plugin \"io.containerd.ttrpc.v1.task\"..." runtime=io.containerd.runc.v2 type=io.containerd.ttrpc.v1
+xcross containerd[219195]: time="2024-02-14T17:46:35.513665923Z" level=info msg="starting signal loop" namespace=moby path=/run/containerd/io.containerd.runtime.v2.task/moby/ebc9c895f14e7234d5fe39a4bd523ac8e65a19c2ec6a628ce41864b772133fd9 pid=797900 runtime=io.containerd.runc.v2
+xcross systemd[4235]: run-docker-runtime\x2drunc-moby-ebc9c895f14e7234d5fe39a4bd523ac8e65a19c2ec6a628ce41864b772133fd9-runc.rEjBaY.mount: Succeeded.
+xcross systemd[1]: run-docker-runtime\x2drunc-moby-ebc9c895f14e7234d5fe39a4bd523ac8e65a19c2ec6a628ce41864b772133fd9-runc.rEjBaY.mount: Succeeded.
+xcross kernel: [5753617.715323] eth0: renamed from veth262ebb4
+xcross systemd-networkd[220463]: vethd0d6bde: Gained carrier
+xcross kernel: [5753617.735550] IPv6: ADDRCONF(NETDEV_CHANGE): vethd0d6bde: link becomes ready
+xcross kernel: [5753617.735598] br-7f92faed1288: port 4(vethd0d6bde) entered blocking state
+xcross kernel: [5753617.735599] br-7f92faed1288: port 4(vethd0d6bde) entered forwarding state
+
+
+==> /var/log/kern.log <==
+xcross kernel: [5753618.064021] device eth0 entered promiscuous mode
+xcross kernel: [5753618.120411] device qemu_host entered promiscuous mode
+xcross kernel: [5753618.121650] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.121652] dockerbridge: port 1(qemu_host) entered disabled state
+xcross kernel: [5753618.121735] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.121736] dockerbridge: port 1(qemu_host) entered forwarding state
+xcross kernel: [5753618.295058] dockerbridge: port 1(qemu_host) entered disabled state
+xcross kernel: [5753618.412133] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.412135] dockerbridge: port 1(qemu_host) entered forwarding state
+
+==> /var/log/syslog <==
+xcross kernel: [5753618.064021] device eth0 entered promiscuous mode
+xcross kernel: [5753618.120411] device qemu_host entered promiscuous mode
+xcross kernel: [5753618.121650] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.121652] dockerbridge: port 1(qemu_host) entered disabled state
+xcross kernel: [5753618.121735] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.121736] dockerbridge: port 1(qemu_host) entered forwarding state
+xcross kernel: [5753618.295058] dockerbridge: port 1(qemu_host) entered disabled state
+xcross kernel: [5753618.412133] dockerbridge: port 1(qemu_host) entered blocking state
+xcross kernel: [5753618.412135] dockerbridge: port 1(qemu_host) entered forwarding state
+xcross systemd-networkd[220463]: vethd0d6bde: Gained IPv6LL
