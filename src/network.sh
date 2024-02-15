@@ -47,6 +47,8 @@ configureDHCP() {
   TAP_NR=$(</sys/class/net/"$VM_NET_TAP"/ifindex)
   TAP_PATH="/dev/tap${TAP_NR}"
 
+  cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev
+
   # Create dev file (there is no udev in container: need to be done manually)
   IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev)
   (( MAJOR < 1)) && error "Cannot find: sys/devices/virtual/net/$VM_NET_TAP" && exit 18
