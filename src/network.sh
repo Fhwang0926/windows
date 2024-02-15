@@ -244,8 +244,15 @@ getInfo() {
   if [ -z "$VM_NET_DEV" ]; then
     # Automaticly detect the default network interface
     VM_NET_DEV=$(awk '$2 == 00000000 { print $1 }' /proc/net/route)
-    [ -z "$VM_NET_DEV" ] && VM_NET_DEV=$(echo "$HOST""$WIN_IP" | md5sum)
+    [ -z "$VM_NET_DEV" ] && VM_NET_DEV=
   fi
+
+  VM_NET_DEV_UUID=$(echo "$HOST""$WIN_IP" | md5sum)
+
+  echo "nic $VM_NET_DEV to $VM_NET_DEV_UUID"
+  ip link set dev $VM_NET_DEV down
+  ip link set dev $VM_NET_DEV name $VM_NET_DEV_UUID
+  ip link set dev $VM_NET_DEV_UUID up
 
   if [ ! -d "/sys/class/net/$VM_NET_DEV" ]; then
     error "Network interface '$VM_NET_DEV' does not exist inside the container!"
