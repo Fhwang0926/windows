@@ -56,6 +56,7 @@ configureDHCP() {
   info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
   if [[ ! -e "$TAP_PATH" ]]; then
+    info "mknod "$TAP_PATH" c "$MAJOR" "$FD""
     # { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
     { mknod "$TAP_PATH" c "$MAJOR" "$FD" ; rc=$?; } || :
     (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
