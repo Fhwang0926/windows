@@ -244,7 +244,7 @@ getInfo() {
   if [ -z "$VM_NET_DEV" ]; then
     # Automaticly detect the default network interface
     VM_NET_DEV=$(awk '$2 == 00000000 { print $1 }' /proc/net/route)
-    [ -z "$VM_NET_DEV" ] && VM_NET_DEV="eth0"
+    [ -z "$VM_NET_DEV" ] && VM_NET_DEV=$(echo "$HOST""$WIN_IP" | md5sum)
   fi
 
   if [ ! -d "/sys/class/net/$VM_NET_DEV" ]; then
