@@ -300,6 +300,8 @@ if [[ "$DHCP" == [Yy1]* ]]; then
     error "You can only enable DHCP while the container is on a macvlan network!" && exit 26
   fi
 
+  rm -rf /dev/vhost-net
+  ln -s "$NET" /dev/vhost-net
   # Configuration for DHCP IP
   configureDHCP
 
@@ -309,8 +311,6 @@ else
   configureNAT
 
 fi
-rm -rf /dev/vhost-net
-ln -s "$NET" /dev/vhost-net
 
 
 NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
