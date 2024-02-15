@@ -280,7 +280,7 @@ getInfo() {
   if [[ ${#VM_NET_MAC} != 17 ]]; then
     error "Invalid MAC address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
   fi
-
+  ip r
   GATEWAY=$(ip r | grep default | awk '{print $3}')
   IP=$(ip address show dev "$VM_NET_DEV" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
