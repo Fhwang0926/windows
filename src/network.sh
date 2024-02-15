@@ -51,7 +51,9 @@ configureDHCP() {
   IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"$VM_NET_TAP"/tap*/dev)
   (( MAJOR < 1)) && error "Cannot find: sys/devices/virtual/net/$VM_NET_TAP" && exit 18
 
-  [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH"
+  [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH" && info "ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH""
+
+  info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
   if [[ ! -e "$TAP_PATH" ]]; then
     { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
