@@ -30,8 +30,8 @@ ADD_ERR="Please add the following setting to your container:"
 configureDHCP() {
 
   # Create a macvtap network for the VM guest
-  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
   info "ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge => $rc"
+  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
 
   if (( rc != 0 )); then
     error "Cannot create macvtap interface. Please make sure the network type is 'macvlan' and not 'ipvlan',"
@@ -55,13 +55,8 @@ configureDHCP() {
 
   info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
-  MINOR=$((FD - 1))
-  MINOR=1
-  info "MINOR : $MINOR"
   if [[ ! -e "$TAP_PATH" ]]; then
-    info "mknod "$TAP_PATH" c "$MAJOR" "$MINOR""
     { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
-    # { mknod "$TAP_PATH" c "$MAJOR" "$FD" ; rc=$?; } || :
     (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
   fi
 
@@ -80,8 +75,6 @@ configureDHCP() {
   if (( rc != 0 )); then
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
-
-  ifconfig
 
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
   # FD=$((VHOST_FD + 1))
