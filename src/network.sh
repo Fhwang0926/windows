@@ -254,6 +254,8 @@ getInfo() {
   ip link set dev $VM_NET_DEV down
   ip link set dev $VM_NET_DEV name $VM_NET_DEV_UUID
   ip link set dev $VM_NET_DEV_UUID up
+
+  ifconfig
   
   VM_NET_DEV=$VM_NET_DEV_UUID
 
