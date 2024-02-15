@@ -30,10 +30,8 @@ ADD_ERR="Please add the following setting to your container:"
 configureDHCP() {
 
   # Create a macvtap network for the VM guest
-  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC"; rc=$?; } || :
+  { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
   info "ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge => $rc"
-
-  ifconfig
 
   if (( rc != 0 )); then
     error "Cannot create macvtap interface. Please make sure the network type is 'macvlan' and not 'ipvlan',"
