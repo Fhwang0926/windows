@@ -80,6 +80,8 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
+  ifconfig
+
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
   # FD=$((VHOST_FD + 1))
 
