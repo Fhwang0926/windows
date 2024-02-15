@@ -55,10 +55,12 @@ configureDHCP() {
 
   info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
+  MINOR=$((FD + 1))
+
   if [[ ! -e "$TAP_PATH" ]]; then
-    info "mknod "$TAP_PATH" c "$MAJOR" "$FD""
-    # { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
-    { mknod "$TAP_PATH" c "$MAJOR" "$FD" ; rc=$?; } || :
+    info "mknod "$TAP_PATH" c "$MAJOR" "$MINOR""
+    { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
+    # { mknod "$TAP_PATH" c "$MAJOR" "$FD" ; rc=$?; } || :
     (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
   fi
 
@@ -69,7 +71,7 @@ configureDHCP() {
     error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
   fi
 
-  VHOST_FD=$((FD + 1))
+  VHOST_FD=$((FD + 2))
   info "default VHOST_FD : $VHOST_FD, NET : $NET"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
