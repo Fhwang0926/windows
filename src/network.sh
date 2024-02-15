@@ -244,20 +244,8 @@ getInfo() {
   if [ -z "$VM_NET_DEV" ]; then
     # Automaticly detect the default network interface
     VM_NET_DEV=$(awk '$2 == 00000000 { print $1 }' /proc/net/route)
-    [ -z "$VM_NET_DEV" ] && VM_NET_DEV=
+    [ -z "$VM_NET_DEV" ] && VM_NET_DEV="eth0"
   fi
-
-  VM_NET_DEV_UUID=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02\1\2\3\4\5/')
-  VM_NET_DEV_UUID="v$VM_NET_DEV_UUID"
-
-  echo "nic $VM_NET_DEV to $VM_NET_DEV_UUID"
-  ip link set dev $VM_NET_DEV down
-  ip link set dev $VM_NET_DEV name $VM_NET_DEV_UUID
-  ip link set dev $VM_NET_DEV_UUID up
-
-  ifconfig
-  
-  VM_NET_DEV=$VM_NET_DEV_UUID
 
   if [ ! -d "/sys/class/net/$VM_NET_DEV" ]; then
     error "Network interface '$VM_NET_DEV' does not exist inside the container!"
@@ -280,7 +268,7 @@ getInfo() {
   if [[ ${#VM_NET_MAC} != 17 ]]; then
     error "Invalid MAC address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
   fi
-  ip r
+
   GATEWAY=$(ip r | grep default | awk '{print $3}')
   IP=$(ip address show dev "$VM_NET_DEV" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
