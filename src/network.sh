@@ -248,6 +248,7 @@ getInfo() {
   fi
 
   VM_NET_DEV_UUID=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02\1\2\3\4\5/')
+  VM_NET_DEV_UUID="v$VM_NET_DEV_UUID"
 
   echo "nic $VM_NET_DEV to $VM_NET_DEV_UUID"
   ip link set dev $VM_NET_DEV down
