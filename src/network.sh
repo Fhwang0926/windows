@@ -55,7 +55,7 @@ configureDHCP() {
 
   info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
-  MINOR=$((FD + 1))
+  MINOR=$((FD - 1))
   info "MINOR : $MINOR"
   if [[ ! -e "$TAP_PATH" ]]; then
     info "mknod "$TAP_PATH" c "$MAJOR" "$MINOR""
@@ -71,7 +71,7 @@ configureDHCP() {
     error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
   fi
 
-  VHOST_FD=$((FD + 2))
+  VHOST_FD=$((FD + 1))
   info "default VHOST_FD : $VHOST_FD, NET : $NET"
   # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
