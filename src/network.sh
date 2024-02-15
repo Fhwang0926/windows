@@ -56,7 +56,7 @@ configureDHCP() {
   info ""$TAP_PATH" c "$MAJOR" "$MINOR""
 
   MINOR=$((FD - 1))
-  MINOR=3
+  MINOR=0
   info "MINOR : $MINOR"
   if [[ ! -e "$TAP_PATH" ]]; then
     info "mknod "$TAP_PATH" c "$MAJOR" "$MINOR""
