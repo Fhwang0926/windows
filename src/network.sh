@@ -253,6 +253,8 @@ getInfo() {
   ip link set dev $VM_NET_DEV down
   ip link set dev $VM_NET_DEV name $VM_NET_DEV_UUID
   ip link set dev $VM_NET_DEV_UUID up
+  
+  VM_NET_DEV=$VM_NET_DEV_UUID
 
   if [ ! -d "/sys/class/net/$VM_NET_DEV" ]; then
     error "Network interface '$VM_NET_DEV' does not exist inside the container!"
