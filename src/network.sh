@@ -30,7 +30,7 @@ ADD_ERR="Please add the following setting to your container:"
 configureDHCP() {
 
   # Create a macvtap network for the VM guest
-
+  info "ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge"
   { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
 
   if (( rc != 0 )); then
@@ -312,7 +312,7 @@ else
 
 fi
 
-
+info "$VM_NET_MAC"
 NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 
 html "Initialized network successfully..."
