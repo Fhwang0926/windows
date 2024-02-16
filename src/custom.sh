@@ -309,7 +309,7 @@ if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
   configureSMBLocal
 
   # mapping
-  CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
+  # CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
   info "CUSTOM_OPTS: $CUSTOM_OPTS"
 else
   info "CUSTOM_SCRIPT: Disabled"
