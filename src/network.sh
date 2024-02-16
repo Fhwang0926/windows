@@ -315,7 +315,7 @@ else
 fi
 
 info "$VM_NET_MAC"
-NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet$FD,mac=$VM_NET_MAC,id=net0"
+NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet$FD,mac=$VM_NET_MAC,id=net$FD"
 
 html "Initialized network successfully..."
 return 0
