@@ -3,9 +3,9 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: "${MAC:=""}"
 : "${DHCP:="N"}"
 : "${HOST_PORTS:=""}"
+: "${MAC:="82:cf:d0:5e:57:66"}"
 
 : "${VM_NET_DEV:=""}"
 : "${VM_NET_TAP:="qemu"}"
@@ -81,13 +81,9 @@ configureDNS() {
 
   # Set DNS server and gateway
   DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,${VM_NET_IP%.*}.1 --dhcp-option=option:router,${VM_NET_IP%.*}.1"
-
-    # Add DNS entry for container
-  DNSMASQ_OPTS="$DNSMASQ_OPTS --address=/host.lan/${VM_NET_IP%.*}.1"
-
   DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
-  [[ "$DEBUG" == [Yy1]* ]] && set -x
 
+  [[ "$DEBUG" == [Yy1]* ]] && set -x
   if ! $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}; then
     error "Failed to start dnsmasq, reason: $?" && exit 29
   fi
@@ -145,6 +141,7 @@ configureNAT() {
   # Create a bridge with a static IP for the VM guest
 
   VM_NET_IP='20.20.20.21'
+  [[ "$DEBUG" == [Yy1]* ]] && set -x
 
   { ip link add dev dockerbridge type bridge ; rc=$?; } || :
 
@@ -155,7 +152,7 @@ configureNAT() {
   ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
 
   while ! ip link set dockerbridge up; do
-    info "Waiting for IP address to become available..."
+    info "Waiting for address to become available..."
     sleep 2
   done
 
@@ -163,7 +160,7 @@ configureNAT() {
   ip tuntap add dev "$VM_NET_TAP" mode tap
 
   while ! ip link set "$VM_NET_TAP" up promisc on; do
-    info "Waiting for TAP to become available..."
+    info "Waiting for tap to become available..."
     sleep 2
   done
 
@@ -184,6 +181,9 @@ configureNAT() {
     # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
     iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
+
+  { set +x; } 2>/dev/null
+  [[ "$DEBUG" == [Yy1]* ]] && echo
 
   NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
@@ -243,16 +243,15 @@ getInfo() {
   MAC=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
   # fi
 
-  VM_NET_MAC="${MAC^^}"
+  # VM_NET_MAC="${MAC^^}"
   VM_NET_MAC="${VM_NET_MAC//-/:}"
-
   if [[ ${#VM_NET_MAC} == 12 ]]; then
     m="$VM_NET_MAC"
     VM_NET_MAC="${m:0:2}:${m:2:2}:${m:4:2}:${m:6:2}:${m:8:2}:${m:10:2}"
   fi
 
   if [[ ${#VM_NET_MAC} != 17 ]]; then
-    error "Invalid MAC address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
+    error "Invalid mac address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
   fi
 
   GATEWAY=$(ip r | grep default | awk '{print $3}')
@@ -275,15 +274,15 @@ getInfo
 html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
-  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC"
-  [ -f /etc/resolv.conf ] && grep '^nameserver*' /etc/resolv.conf
-  echo
+  info "Container IP is $IP with gateway $GATEWAY on interface $VM_NET_DEV" && echo
 fi
 
 if [[ "$DHCP" == [Yy1]* ]]; then
 
-  if [[ "$GATEWAY" == "172."* ]] && [[ "$DEBUG" != [Yy1]* ]]; then
-    error "You can only enable DHCP while the container is on a macvlan network!" && exit 26
+  if [[ "$GATEWAY" == "172."* ]]; then
+    if [[ "$DEBUG" != [Yy1]* ]]; then
+      error "You can only enable DHCP while the container is on a macvlan network!" && exit 26
+    fi
   fi
 
   # Configuration for DHCP IP
