@@ -303,17 +303,17 @@ fi
 
 info "CUSTOM_SCRIPT : $CUSTOM_SCRIPT"
 
-if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
-  # Configuration for static IP
-  configureNAT
-  configureSMBLocal
+# if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
+#   # Configuration for static IP
+#   configureNAT
+#   configureSMBLocal
 
-  # mapping
-  CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
-  info "CUSTOM_OPTS: $CUSTOM_OPTS"
-else
-  info "CUSTOM_SCRIPT: Disabled"
-fi
+#   # mapping
+#   CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
+#   info "CUSTOM_OPTS: $CUSTOM_OPTS"
+# else
+#   info "CUSTOM_SCRIPT: Disabled"
+# fi
 
 html "Initialized custom network successfully..."
 
