@@ -11,7 +11,6 @@ cd /run
 . install.sh    # Run installation
 . disk.sh       # Initialize disks
 . display.sh    # Initialize graphics
-. network.before.sh    # Initialize network
 . network.sh    # Initialize network
 . samba.sh      # Configure samba
 . custom.sh      # Configure custom
