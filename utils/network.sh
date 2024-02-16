@@ -16,6 +16,11 @@ set -Eeuo pipefail
 : "${DNSMASQ:="/usr/sbin/dnsmasq"}"
 : "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 
+# multi instance
+
+: "${FD:="30"}"
+: "${NET:="/dev/vhost-net-$FD"}"
+
 ADD_ERR="Please add the following setting to your container:"
 
 # ######################################
@@ -25,8 +30,8 @@ ADD_ERR="Please add the following setting to your container:"
 configureDHCP() {
 
   # Create a macvtap network for the VM guest
-
   { ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge ; rc=$?; } || :
+  info "ip link add link "$VM_NET_DEV" name "$VM_NET_TAP" address "$VM_NET_MAC" type macvtap mode bridge => $rc"
 
   if (( rc != 0 )); then
     error "Cannot create macvtap interface. Please make sure the network type is 'macvlan' and not 'ipvlan',"
@@ -48,24 +53,31 @@ configureDHCP() {
 
   [[ ! -e "$TAP_PATH" ]] && [[ -e "/dev0/${TAP_PATH##*/}" ]] && ln -s "/dev0/${TAP_PATH##*/}" "$TAP_PATH"
 
+  info ""$TAP_PATH" c "$MAJOR" "$MINOR""
+
   if [[ ! -e "$TAP_PATH" ]]; then
     { mknod "$TAP_PATH" c "$MAJOR" "$MINOR" ; rc=$?; } || :
     (( rc != 0 )) && error "Cannot mknod: $TAP_PATH ($rc)" && exit 20
   fi
 
-  { exec 30>>"$TAP_PATH"; rc=$?; } 2>/dev/null || :
+  info "default FD : $FD"
+  { eval "exec $FD>>"$TAP_PATH";" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "Cannot create TAP interface ($rc). $ADD_ERR --device-cgroup-rule='c *:* rwm'" && exit 21
   fi
 
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  VHOST_FD=$((FD + 1))
+  info "default VHOST_FD : $VHOST_FD, NET : $NET"
+  # { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  { eval "exec $VHOST_FD>>$NET;" rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
-    error "VHOST can not be found ($rc). $ADD_ERR --device=/dev/vhost-net" && exit 22
+    error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30"
+  NET_OPTS="-netdev tap,id=hostnet$FD,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
+  # FD=$((VHOST_FD + 1))
 
   return 0
 }
@@ -87,6 +99,8 @@ configureDNS() {
 
   DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
   [[ "$DEBUG" == [Yy1]* ]] && set -x
+
+  info "$DNSMASQ_OPTS"
 
   if ! $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}; then
     error "Failed to start dnsmasq, reason: $?" && exit 29
@@ -185,9 +199,9 @@ configureNAT() {
     iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
 
-  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
+  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet$FD"
 
-  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
+  { exec 40>> "$NET"; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
   configureDNS
@@ -201,8 +215,10 @@ closeNetwork() {
   nginx -s stop 2> /dev/null
   fWait "nginx"
 
-  exec 30<&- || true
-  exec 40<&- || true
+  # exec 30<&- || true
+  # exec 40<&- || true
+  eval "exec $FD<&-" || true
+  eval "exec $VHOST_FD<&-" || true
 
   if [[ "$DHCP" == [Yy1]* ]]; then
 
@@ -265,9 +281,9 @@ getInfo() {
 #  Configure Network
 # ######################################
 
-if [ ! -c /dev/vhost-net ]; then
-  if mknod /dev/vhost-net c 10 238; then
-    chmod 660 /dev/vhost-net
+if [ ! -c "$NET" ]; then
+  if mknod "$NET" c 10 238; then
+    chmod 660 "$NET"
   fi
 fi
 
@@ -286,6 +302,8 @@ if [[ "$DHCP" == [Yy1]* ]]; then
     error "You can only enable DHCP while the container is on a macvlan network!" && exit 26
   fi
 
+  rm -rf /dev/vhost-net
+  ln -s "$NET" /dev/vhost-net
   # Configuration for DHCP IP
   configureDHCP
 
@@ -296,7 +314,8 @@ else
 
 fi
 
-NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
+info "$VM_NET_MAC"
+NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet$FD,mac=$VM_NET_MAC,id=net$FD"
 
 html "Initialized network successfully..."
 return 0
