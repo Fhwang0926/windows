@@ -306,7 +306,7 @@ info "CUSTOM_SCRIPT : $CUSTOM_SCRIPT"
 if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
   # Configuration for static IP
   # configureNAT
-  configureSMBLocal
+  # configureSMBLocal
 
   # mapping
   # CUSTOM_OPTS="$CUSTOM_OPTS -device virtio-net-pci,romfile=,netdev=hostnet1,mac=$VM_NET_MAC,id=net1"
