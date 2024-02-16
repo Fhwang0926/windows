@@ -76,7 +76,7 @@ configureDHCP() {
     error "VHOST can not be found ($rc). $ADD_ERR --device=$NET" && exit 22
   fi
 
-  NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
+  NET_OPTS="-netdev tap,id=hostnet$FD,vhost=on,vhostfd=$VHOST_FD,fd=$FD"
   # FD=$((VHOST_FD + 1))
 
   return 0
@@ -199,7 +199,7 @@ configureNAT() {
     iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
 
-  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
+  NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet$FD"
 
   { exec 40>> "$NET"; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
@@ -315,7 +315,7 @@ else
 fi
 
 info "$VM_NET_MAC"
-NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
+NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet$FD,mac=$VM_NET_MAC,id=net0"
 
 html "Initialized network successfully..."
 return 0
