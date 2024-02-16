@@ -305,7 +305,7 @@ info "CUSTOM_SCRIPT : $CUSTOM_SCRIPT"
 
 if [[ "$CUSTOM_SCRIPT" == [Yy1]* ]]; then
   # Configuration for static IP
-  configureNAT
+  # configureNAT
   configureSMBLocal
 
   # mapping
