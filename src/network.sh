@@ -250,6 +250,7 @@ getInfo() {
 
   # VM_NET_MAC="${MAC^^}"
   VM_NET_MAC=$MAC
+  info "VM_NET_MAC : $VM_NET_MAC"
   VM_NET_MAC="${VM_NET_MAC//-/:}"
   if [[ ${#VM_NET_MAC} == 12 ]]; then
     m="$VM_NET_MAC"
