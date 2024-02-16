@@ -1,6 +1,5 @@
 FROM scratch
 COPY --from=qemux/qemu-docker:4.14 / /
-# COPY --from=harbor.donghwa.dev:4443/seo/qemu-docker:4.14 / /
 
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND "noninteractive"
@@ -27,8 +26,11 @@ RUN mkdir -p /utils
 COPY ./src /run/
 COPY ./utils/*.bat /utils/
 COPY ./assets /run/assets
+
+ADD https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py /usr/sbin/wsdd
 ADD https://github.com/qemus/virtiso/releases/download/v0.1.240/virtio-win-0.1.240.iso /run/drivers.iso
-RUN chmod +x /run/*.sh
+
+RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
 EXPOSE 8006 3389
 VOLUME /storage
