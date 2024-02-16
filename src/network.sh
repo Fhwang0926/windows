@@ -238,10 +238,10 @@ getInfo() {
     error "$ADD_ERR -e \"VM_NET_DEV=NAME\" to specify another interface name." && exit 27
   fi
 
-  if [ -z "$MAC" ]; then
+  # if [ -z "$MAC" ]; then
     # Generate MAC address based on Docker container ID in hostname
-    MAC=$(echo "$HOST" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
-  fi
+  MAC=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+  # fi
 
   VM_NET_MAC="${MAC^^}"
   VM_NET_MAC="${VM_NET_MAC//-/:}"
