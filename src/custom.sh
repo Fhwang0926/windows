@@ -257,7 +257,7 @@ configureSMBLocal () {
       echo "    guest only = yes"
       echo "    force user = root"
       echo "    force group = root"
-    }  > "$SAMBA"
+    }  >> "$SAMBA"
   fi
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
