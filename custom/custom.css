@@ -1,5 +1,7 @@
 .noVNC_logo {
-  display: none !important;
+  background-image: url('../../app/images/custom.png') !important;
+  background-repeat: no-repeat !important;
+  width: 100%;
 }
 #noVNC_control_bar .noVNC_logo {
   display: none !important;
