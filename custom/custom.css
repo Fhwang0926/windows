@@ -1,3 +1,6 @@
+.noVNC_logo {
+  display: none !important;
+}
 #noVNC_control_bar .noVNC_logo {
   display: none !important;
 }
