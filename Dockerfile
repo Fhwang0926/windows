@@ -30,7 +30,8 @@ COPY ./assets /run/assets
 # custom
 COPY ./custom/img/favicon.ico /usr/share/novnc/app/images/icons/novnc.ico
 COPY ./custom/img/custom.png /usr/share/novnc/app/images/custom.png
-RUN echo "<link href=\"app/styles/custom\" rel=\"stylesheet\" type=\"text/css\" />" >> /usr/share/novnc/vnc.html
+COPY ./custom/custom.css /usr/share/novnc/app/styles/custom.css
+RUN echo "<link href=\"app/styles/custom.css\" rel=\"stylesheet\" type=\"text/css\" />" >> /usr/share/novnc/vnc.html
 
 ADD https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py /usr/sbin/wsdd
 ADD https://github.com/qemus/virtiso/releases/download/v0.1.240/virtio-win-0.1.240.iso /run/drivers.iso
