@@ -27,6 +27,9 @@ COPY ./src /run/
 COPY ./utils/*.bat /utils/
 COPY ./assets /run/assets
 
+# custom
+COPY ./custom/img/favicon.svg /var/www/favicon.svg
+
 ADD https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py /usr/sbin/wsdd
 ADD https://github.com/qemus/virtiso/releases/download/v0.1.240/virtio-win-0.1.240.iso /run/drivers.iso
 

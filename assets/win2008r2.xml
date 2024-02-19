@@ -73,7 +73,7 @@
       </UpgradeData>
       <UserData>
         <AcceptEula>true</AcceptEula>
-        <FullName>Docker</FullName>
+        <FullName>3vi</FullName>
         <Organization>Windows for Docker</Organization>
         <ProductKey />
       </UserData>
@@ -189,7 +189,7 @@
       <UserAccounts>
         <LocalAccounts>
           <LocalAccount wcm:action="add">
-            <Name>Docker</Name>
+            <Name>3vi</Name>
             <Group>Administrators</Group>
             <Password>
               <Value />
@@ -203,7 +203,7 @@
         </AdministratorPassword>
       </UserAccounts>
       <AutoLogon>
-        <Username>Docker</Username>
+        <Username>3vi</Username>
         <Enabled>true</Enabled>
         <LogonCount>65432</LogonCount>
         <Password>
@@ -234,7 +234,7 @@
         </SynchronousCommand>
         <SynchronousCommand wcm:action="add">
           <Order>3</Order>
-          <CommandLine>cmd /C wmic useraccount where name="Docker" set PasswordExpires=false</CommandLine>
+          <CommandLine>cmd /C wmic useraccount where name="3vi" set PasswordExpires=false</CommandLine>
           <Description>Password Never Expires</Description>
         </SynchronousCommand>
         <SynchronousCommand wcm:action="add">
