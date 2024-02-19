@@ -1,3 +1,3 @@
-.noVNC_logo {
-  background-image: url('../../app/images/custom.png') !important;
+#noVNC_control_bar .noVNC_logo {
+  display: none !important;
 }
