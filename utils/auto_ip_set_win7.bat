@@ -3,13 +3,16 @@ setlocal ENABLEDELAYEDEXPANSION
 ping 1.1.1.1 -n 5
 
 @REM get first nic name
-for /f "tokens=3,* delims=:" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
-    set INTERFACE_NAME=%%j
-    set INTERFACE_NAME=!INTERFACE_NAME:~1!
-    goto setAddress
-)
+@REM for /f "tokens=3,* delims=:" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
+@REM     set INTERFACE_NAME=%%j
+@REM     set INTERFACE_NAME=!INTERFACE_NAME:~1!
+@REM     goto setAddress
+@REM )
 
-:setAddress
+@REM :setAddress
+
+set INTERFACE_NAME=Internet
+
 IF NOT "!INTERFACE_NAME!"=="" (
     netsh interface ip set address name="!INTERFACE_NAME!" static WIN_IP 255.255.255.0 WIN_GW 1
     netsh interface ip set dns name="!INTERFACE_NAME!" static 8.8.8.8 primary
