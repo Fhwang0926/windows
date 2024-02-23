@@ -188,8 +188,8 @@ getInfo() {
 
   # if [ -z "$MAC" ]; then
     # Generate MAC address based on Docker container ID in hostname
-    # MAC=$(echo "$HOST""$WIN_IP""$(date)" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
-    MAC=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+    MAC=$(echo "$HOST""$WIN_IP""$(date)" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+    # MAC=$(echo "$HOST""$WIN_IP" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
     # NET_UUID=$(echo "$HOST""$WIN_IP""$(date)" | md5sum)
   # fi
 
