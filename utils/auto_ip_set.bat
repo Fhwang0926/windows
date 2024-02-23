@@ -25,15 +25,15 @@ set "firstAdapterFound=0"
 
 net use Z: \\host.lan\common /persistent:yes
 
-@REM for /f "tokens=3,* delims=: " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*연결됨" /C:"^.*Connected"') do (
-@REM     if "!firstAdapterFound!"=="0" (
-@REM         set "firstAdapterFound=1"
-@REM         echo pass first nic: %%j
-@REM     ) else (
-@REM         echo disable nic: %%j
-@REM         netsh interface set interface "%%j" admin=disable
-@REM     )
-@REM )
+for /f "tokens=3,* delims=: " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*연결됨" /C:"^.*Connected"') do (
+    if "!firstAdapterFound!"=="0" (
+        set "firstAdapterFound=1"
+        echo pass first nic: %%j
+    ) else (
+        echo disable nic: %%j
+        netsh interface set interface "%%j" admin=disable
+    )
+)
 
 @REM cls
 
