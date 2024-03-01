@@ -11,15 +11,18 @@ for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" 
     echo %%a %count%
 )
 
-if "%gatewayConfigured%"=="Yes" (
-    echo excute script
-    net use Z: \\host.lan\common /persistent:yes
-    echo connected host.lan
 
-    call Z:\auto_ip_set.bat
-) else (
-    echo already first nic gateway connected
-)
+echo excute script
+net use Z: \\host.lan\common /persistent:yes
+echo connected host.lan
+
+call Z:\auto_ip_set.bat
+
+@REM if "%gatewayConfigured%"=="Yes" (
+    
+@REM ) else (
+@REM     echo already first nic gateway connected
+@REM )
 
 net use Z: /delete /y
 
