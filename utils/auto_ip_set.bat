@@ -6,10 +6,11 @@ set ipAddress=WIN_IP
 set subnetMask=WIN_SN
 set gateway=WIN_GW
 
-
 ping -n 1 %gateway% >nul
+
 if %errorlevel%==0 (
     echo Connection already.
+    
 ) else (
     net use Z: \\host.lan\common /persistent:yes
     echo Setting network configuration for %adapterName%...
