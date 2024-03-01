@@ -1,41 +1,28 @@
 @echo off
-setlocal enableextensions enabledelayedexpansion
 
-@REM get first nic name
-@REM for /f "tokens=3,* delims= " %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
-@REM     set INTERFACE_NAME=%%j
-@REM     goto checkGateway
-@REM )
-
-:checkGateway
-set has_gateway=0
 set count=0
-set INTERFACE_NAME=Internet
+set gatewayConfigured=No
 
-for /f "tokens=2 delims=:" %%a in ('netsh interface ipv4 show config name^="!INTERFACE_NAME!" ^| findstr /C:"Default Gateway" /C:"기본 게이트웨이"') do (
-    set /a count+=1
-    if not "%%a"=="" (
-        set has_gateway=1
-    )
-)
 
-@REM if !count! EQU 1 (
-@REM     echo already actived
-@REM     goto :eof
-@REM ) else (
-@REM     echo continue network setting
+@REM for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"기본 게이트웨이" /C:"Default Gateway"') do (
+@REM     if not "%%a"=="" set gatewayConfigured=Yes
+
+@REM     set /a count+=1
+@REM     echo %%a %count%
 @REM )
 
-if !has_gateway! EQU 0 (
-    echo execute script
-    @REM net use Z: /delete /y
-    net use Z: \\host.lan\common /persistent:yes
-    echo connected host.lan
 
-    call Z:\auto_ip_set.bat
-) else (
-    echo already first nic gateway connected
-)
+echo excute script
+net use Z: \\host.lan\common /persistent:yes
+echo connected host.lan
+
+call Z:\auto_ip_set.bat
+
+@REM if "%gatewayConfigured%"=="Yes" (
+    
+@REM ) else (
+@REM     echo already first nic gateway connected
+@REM )
 
 net use Z: /delete /y
 
@@ -44,4 +31,6 @@ ipconfig
 pause
 
 :end
+
 endlocal
+

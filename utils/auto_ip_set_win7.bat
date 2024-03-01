@@ -1,36 +1,37 @@
 @echo off
-setlocal ENABLEDELAYEDEXPANSION
-ping 1.1.1.1 -n 5
+setlocal
 
-@REM get first nic name
-@REM for /f "tokens=3,* delims=:" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
-@REM     set INTERFACE_NAME=%%j
-@REM     set INTERFACE_NAME=!INTERFACE_NAME:~1!
-@REM     goto setAddress
+set adapterName=LAN
+set ipAddress=WIN_IP
+set subnetMask=WIN_SN
+set gateway=WIN_GW
+
+@REM ping -n 1 %gateway% >nul
+
+@REM if %errorlevel%==0 (
+@REM     echo Connection already.
+
+@REM ) else (
+@REM     net use Z: \\host.lan\common /persistent:yes
+@REM     echo Setting network configuration for %adapterName%...
+
+@REM     netsh interface ip set address name="%adapterName%" static %ipAddress% %subnetMask% %gateway%
+@REM     netsh interface ip set dns name="%adapterName%" static 8.8.8.8 primary
+@REM     netsh interface ip add dns name="%adapterName%" 8.8.8.8 index=2
+
+@REM     echo Network configuration has been set.
 @REM )
 
-@REM :setAddress
-
-set INTERFACE_NAME=Internet
-
-IF NOT "!INTERFACE_NAME!"=="" (
-    netsh interface ip set address name="!INTERFACE_NAME!" static WIN_IP 255.255.255.0 WIN_GW 1
-    netsh interface ip set dns name="!INTERFACE_NAME!" static 8.8.8.8 primary
-    netsh interface ip add dns name="!INTERFACE_NAME!" 8.8.8.8 index=2
-
-    echo renew !INTERFACE_NAME!
-) ELSE (
-    echo not found nic !INTERFACE_NAME!
-)
-
-@REM all disabled
-
-set "firstAdapterFound=0"
-
 net use Z: \\host.lan\common /persistent:yes
+echo Setting network configuration for %adapterName%...
 
-@REM cls
+netsh interface ip set address name="%adapterName%" static %ipAddress% %subnetMask% %gateway%
+netsh interface ip set dns name="%adapterName%" static 8.8.8.8 primary
+netsh interface ip add dns name="%adapterName%" 8.8.8.8 index=2
 
-echo nic configuration complete
+echo Network configuration has been set.
 
-pause
+
+echo NIC configuration complete.
+
+endlocal
