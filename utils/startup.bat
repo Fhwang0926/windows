@@ -4,12 +4,12 @@ set count=0
 set gatewayConfigured=No
 
 
-for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"기본 게이트웨이" /C:"Default Gateway"') do (
-    if not "%%a"=="" set gatewayConfigured=Yes
+@REM for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"기본 게이트웨이" /C:"Default Gateway"') do (
+@REM     if not "%%a"=="" set gatewayConfigured=Yes
 
-    set /a count+=1
-    echo %%a %count%
-)
+@REM     set /a count+=1
+@REM     echo %%a %count%
+@REM )
 
 
 echo excute script
