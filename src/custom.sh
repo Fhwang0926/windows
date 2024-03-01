@@ -263,10 +263,13 @@ configureSMBLocal () {
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
   WIN_GW=${WIN_IP%.*}.1
+  WIN_SN="255.255.255.0"
   sed -i "s/WIN_IP/$WIN_IP/g" $SHARE/auto_ip_set.bat
+  sed -i "s/WIN_SN/$WIN_SN/g" $SHARE/auto_ip_set.bat
   sed -i "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set.bat
 
   sed -i "s/WIN_IP/$WIN_IP/g" $SHARE/auto_ip_set_win7.bat
+  sed -i "s/WIN_SN/$WIN_SN/g" $SHARE/auto_ip_set_win7.bat
   sed -i "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set_win7.bat
 
   # { cat "$SHARE/auto_ip_rollback.bat" } | unix2dos > "$SHARE/auto_ip_rollback.bat"
