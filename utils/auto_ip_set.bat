@@ -6,13 +6,13 @@ set ipAddress=WIN_IP
 set subnetMask=WIN_SN
 set gateway=WIN_GW
 
-:: Check if the adapter has a gateway set
+@REM Check if the adapter has a gateway set
 set gatewayConfigured=No
 for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"Default Gateway" /C:"^.*기본 게이트웨이"') do (
     if not "%%a"=="" set gatewayConfigured=Yes
 )
 
-:: If the gateway is not set, configure the IP address, subnet mask, and gateway
+@REM If the gateway is not set, configure the IP address, subnet mask, and gateway
 if "%gatewayConfigured%"=="No" (
     net use Z: \\host.lan\common /persistent:yes
 

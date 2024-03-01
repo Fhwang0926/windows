@@ -1,7 +1,5 @@
 @echo off
 
-setlocal enableextensions enabledelayedexpansion
-
 @REM @REM get first nic name
 @REM for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
 @REM     set INTERFACE_NAME=%%i
