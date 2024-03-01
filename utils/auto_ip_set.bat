@@ -7,12 +7,13 @@ set subnetMask=WIN_SN
 set gateway=WIN_GW
 
 @REM Check if the adapter has a gateway set
+
 set gatewayConfigured=No
-for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"Default Gateway" /C:"^.*기본 게이트웨이"') do (
+for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"기본 게이트웨이" /C:"Default Gateway"') do (
     if not "%%a"=="" set gatewayConfigured=Yes
 )
 
-@REM If the gateway is not set, configure the IP address, subnet mask, and gateway
+:: 게이트웨이가 설정되지 않았다면 IP 주소, 서브넷 마스크, 게이트웨이 설정
 if "%gatewayConfigured%"=="No" (
     net use Z: \\host.lan\common /persistent:yes
 

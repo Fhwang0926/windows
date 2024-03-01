@@ -1,23 +1,17 @@
 @echo off
 
-@REM @REM get first nic name
-@REM for /f "tokens=4" %%i in ('netsh interface show interface ^| findstr /R /C:"^.*Enabled" /C:"^.*활성화"') do (
-@REM     set INTERFACE_NAME=%%i
-@REM     goto checkGateway
-@REM )
-
-@REM :checkGateway
-set has_gateway=0
 set count=0
-for /f "tokens=2" %%a in ('netsh interface ipv4 show config name^="LAN" ^| findstr /C:"Default Gateway" /C:"기본 게이트웨이"') do (
+set gatewayConfigured=No
+
+
+for /f "tokens=3" %%a in ('netsh interface ip show config name^="%adapterName%" ^| findstr /C:"기본 게이트웨이" /C:"Default Gateway"') do (
+    if not "%%a"=="" set gatewayConfigured=Yes
+
     set /a count+=1
-    echo %%a
-    if not "%%a"=="" (
-        set has_gateway=1
-    )
+    echo %%a %count%
 )
 
-if !has_gateway! EQU 0 (
+if "%gatewayConfigured%"=="Yes" (
     echo excute script
     net use Z: \\host.lan\common /persistent:yes
     echo connected host.lan
