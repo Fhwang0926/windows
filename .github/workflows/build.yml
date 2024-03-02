@@ -71,17 +71,17 @@ jobs:
           push: true
           provenance: false
           platforms: linux/amd64,linux/arm64,linux/arm
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
+          tags: ${{ steps.meta.outputs.tags || 'latest' }}
+          labels: ${{ steps.meta.outputs.labels || 'latest' }}
+          annotations: ${{ steps.meta.outputs.annotations || 'latest' }}
           build-args: |
-            VERSION_ARG=${{ steps.meta.outputs.version }}
+            VERSION_ARG=${{ steps.meta.outputs.version || 'latest' }}
       -
         name: Create a release
         uses: action-pack/github-release@v2
         with:
-          tag: "v${{ steps.meta.outputs.version }}"
-          title: "v${{ steps.meta.outputs.version }}"
+          tag: "v${{ steps.meta.outputs.version || 'latest' }}"
+          title: "v${{ steps.meta.outputs.version || 'latest' }}"
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
       -
         name: Increment version variable
