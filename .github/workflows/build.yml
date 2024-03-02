@@ -101,7 +101,7 @@ jobs:
         # start build and push
       - 
         name: Build the tagged Docker image
-        run: docker build app --file ./Dockerfile --tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base --tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:latest
+        run: docker build --file ./Dockerfile --tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base --tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:latest
       - 
         name: Push the tagged Docker image
         run: |
