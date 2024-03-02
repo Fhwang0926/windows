@@ -72,8 +72,8 @@ jobs:
           provenance: false
           platforms: linux/amd64,linux/arm64,linux/arm
           tags: ${{ steps.meta.outputs.tags || 'latest' }}
-          labels: ${{ steps.meta.outputs.labels || 'latest' }}
-          annotations: ${{ steps.meta.outputs.annotations || 'latest' }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
           build-args: |
             VERSION_ARG=${{ steps.meta.outputs.version || 'latest' }}
       -
