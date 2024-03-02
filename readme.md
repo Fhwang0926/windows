@@ -11,7 +11,7 @@
 
 </div></h1>
 
-Windows in a docker container.
+Windows in a Docker container.
 
 ## Features
 
@@ -44,7 +44,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 120 dockurr/windows
+docker run -it --rm --name windows -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 120 dockurr/windows
 ```
 
 ## FAQ
@@ -94,6 +94,14 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
 
   To install ARM64 versions of Windows use [dockur/windows-arm](https://github.com/dockur/windows-arm/).
 
+* ### How do I connect using RDP?
+
+  The web-viewer is mainly meant to be used during installation, as its picture quality is low, and it has no audio or clipboard for example.
+
+  So for a better experience you can connect using any Microsoft Remote Desktop client to the IP of the container, using the username `docker` and by leaving the password empty.
+
+  There is a good RDP client for [Android](https://play.google.com/store/apps/details?id=com.microsoft.rdc.androidx) available from the Play Store. One for [iOS](https://apps.apple.com/nl/app/microsoft-remote-desktop/id714464092?l=en-GB) is in the Apple Store. For Linux you can use [rdesktop](http://www.rdesktop.org/) and for Windows you don't need to install anything as it is already ships as part of the operating system.
+
 * ### How do I increase the amount of CPU or RAM?
 
   By default, 2 CPU cores and 4 GB of RAM are allocated to the container, as those are the minimum requirements of Windows 11.
@@ -136,7 +144,7 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
 
 * ### How do I install a custom image?
 
-  In order to download a custom ISO image, start a clean container with the URL specified in the `VERSION` environment variable:
+  In order to download a custom ISO image, start a clean container with the URL of the ISO specified in the `VERSION` environment variable:
   
   ```yaml
   environment:
@@ -264,7 +272,7 @@ docker run -it --rm -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-ti
 
 * ### Is this project legal?
 
-  Yes, this project contains only open-source code and does not distribute any copyrighted material. Neither does it try to circumvent any copyright protection measures. So under all applicable laws, this project would be considered legal.
+  Yes, this project contains only open-source code and does not distribute any copyrighted material. Any product keys found in the code are just generic placeholders provided by Microsoft for trial purposes. So under all applicable laws, this project would be considered legal.
 
 ## Stars
 [![Stars](https://starchart.cc/dockur/windows.svg?variant=adaptive)](https://starchart.cc/dockur/windows)

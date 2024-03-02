@@ -1,5 +1,5 @@
 FROM scratch
-COPY --from=qemux/qemu-docker:4.14 / /
+COPY --from=qemux/qemu-docker:4.15 / /
 
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND "noninteractive"
@@ -34,7 +34,7 @@ COPY ./custom/custom.css /usr/share/novnc/app/styles/custom.css
 RUN echo "<link href=\"app/styles/custom.css\" rel=\"stylesheet\" type=\"text/css\" />" >> /usr/share/novnc/vnc.html
 
 ADD https://raw.githubusercontent.com/christgau/wsdd/master/src/wsdd.py /usr/sbin/wsdd
-ADD https://github.com/qemus/virtiso/releases/download/v0.1.240/virtio-win-0.1.240.iso /run/drivers.iso
+ADD https://github.com/qemus/virtiso/releases/download/v0.1.248/virtio-win-0.1.248.iso /run/drivers.iso
 
 RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
