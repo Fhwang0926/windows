@@ -259,6 +259,17 @@ configureSMBLocal () {
       echo "    force user = root"
       echo "    force group = root"
     }  >> "$SAMBA"
+
+    {
+      echo "[pcap]"
+      echo "    path = /opt/pcap"
+      echo "    comment = Pcap"
+      echo "    writable = yes"
+      echo "    guest ok = yes"
+      echo "    guest only = yes"
+      echo "    force user = root"
+      echo "    force group = root"
+    }  >> "$SAMBA"
   fi
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
