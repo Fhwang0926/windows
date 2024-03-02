@@ -61,13 +61,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
-        name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      -
         name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -92,15 +85,31 @@ jobs:
         uses: action-pack/bump@v2
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-      -
-        name: Send mail
-        uses: action-pack/send-mail@v1
-        with:
-          to: ${{secrets.MAILTO}}
-          from: Github Actions <${{secrets.MAILTO}}>
-          connection_url: ${{secrets.MAIL_CONNECTION}}
-          subject: Build of ${{ github.event.repository.name }} v${{ steps.meta.outputs.version }} completed
-          body: |
-              The build job of ${{ github.event.repository.name }} v${{ steps.meta.outputs.version }} was completed successfully! 
-              
-              See https://github.com/${{ github.repository }}/actions for more information.
+        
+        # start build and push
+      - 
+        name: Build the tagged Docker image
+        run: docker build app --file ./Dockerfile --tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base
+      - 
+        name: Push the tagged Docker image
+        run: docker push ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base
+
+  apply-if-failed:
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: always() && (needs.apply.result == 'failure')
+    steps:
+      - name: WEBHOOK apply was failed
+        env:
+          NEEDS_CONTEXT: ${{ toJSON(needs) }}
+        run: |
+          echo "$NEEDS_CONTEXT"
+      - name: Slack Notification Failed
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_COLOR: '#FF2D00' # or a specific color like 'good' or '#ff00ff'
+#           SLACK_ICON: https://github.com/rtCamp.png?size=48 # later add favicon
+          SLACK_TITLE: 'github cd/ci was failed'
+          SLACK_MESSAGE: ${{ github.event.head_commit.title }} ${{ github.event.head_commit.message }}
+          SLACK_USERNAME: security-bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
