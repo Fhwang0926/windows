@@ -11,7 +11,7 @@ on:
       - '.gitignore'
       - '.dockerignore'
       - '.github/**'
-      - '.github/workflows/**'
+      # - '.github/workflows/**'
 
 concurrency:
   group: build
@@ -98,7 +98,6 @@ jobs:
         name: Push the tagged Docker image
         run: |
           docker push ${{ secrets.DOCKERHUB_REPO  }}/seo/win:latest
-          echo 1
 
   apply-if-failed:
     runs-on: ubuntu-latest
