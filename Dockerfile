@@ -38,6 +38,10 @@ ADD https://github.com/qemus/virtiso/releases/download/v0.1.248/virtio-win-0.1.2
 
 RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
+# SSL
+RUN rm -rf /etc/nginx/sites-enabled/web.conf
+RUN mv nginx.conf /etc/nginx/sites-enabled/web.conf
+
 EXPOSE 8006 3389
 VOLUME /storage
 
