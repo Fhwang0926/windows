@@ -34,7 +34,7 @@ RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
 # SSL
 RUN rm -rf /etc/nginx/sites-enabled/web.conf
-RUN mv nginx.conf /etc/nginx/sites-enabled/web.conf
+COPY nginx.conf /etc/nginx/sites-enabled/web.conf
 
 EXPOSE 8006 3389
 VOLUME /storage
