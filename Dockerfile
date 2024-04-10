@@ -37,7 +37,9 @@ RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 # SSL
 RUN openssl genpkey -algorithm RSA -out /ssl/private_key.pem
 RUN openssl rsa -pubout -in /ssl/private_key.pem -out /ssl/public_key.pem
-RUN openssl req -new -x509 -key /ssl/private_key.pem -out /ssl/cert.pem -days 365
+RUN openssl req -new -x509 -key /ssl/private_key.pem -out /ssl/cert.pem -days 365 \
+    -subj "/C=US/ST=New York/L=New York/O=Example Company/OU=IT Department/CN=example.com"
+
 
 # COPY cert.pem /ssl/fullchain.pem;
 # COPY private_key.pem /ssl/privkey.pem;
