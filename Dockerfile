@@ -10,6 +10,7 @@ RUN apt-get update && \
         curl \
         7zip \
         wsdd \
+        openssl \
         samba \
         dos2unix \
         cabextract \
@@ -33,6 +34,13 @@ ADD https://github.com/qemus/virtiso/releases/download/v0.1.248/virtio-win-0.1.2
 RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
 # SSL
+RUN openssl genpkey -algorithm RSA -out private_key.pem
+RUN openssl rsa -pubout -in private_key.pem -out public_key.pem
+RUN openssl req -new -x509 -key private_key.pem -out cert.pem -days 365
+
+COPY cert.pem /ssl/fullchain.pem;
+COPY private_key.pem /ssl/privkey.pem;
+
 RUN rm -rf /etc/nginx/sites-enabled/web.conf
 COPY nginx.conf /etc/nginx/sites-enabled/web.conf
 
