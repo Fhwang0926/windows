@@ -284,12 +284,6 @@ configureSMBLocal () {
   sed -i "s/WIN_SN/$WIN_SN/g" $SHARE/auto_ip_set_win7.bat
   sed -i "s/WIN_GW/$WIN_GW/g" $SHARE/auto_ip_set_win7.bat
 
-  if [[ "$NFS_UNMOUNT" == [Yy1]* ]]; then
-    {
-      echo "net use Z: /delete /y"
-    }  >> "$SHARE/auto_ip_set.bat"
-  fi
-
   # { cat "$SHARE/auto_ip_rollback.bat" } | unix2dos > "$SHARE/auto_ip_rollback.bat"
   # { cat "$SHARE/startup.bat" } | unix2dos > "$SHARE/startup.bat"
   # { cat "$SHARE/auto_ip_set.bat" } | unix2dos > "$SHARE/auto_ip_set.bat"
@@ -298,13 +292,23 @@ configureSMBLocal () {
     echo "ping 1.1.1.1 -n 3"
   } | unix2dos > "$SHARE/ping.bat"
 
-  info "starting smbd"
-  smbd -D
-  info "started smbd"
+  if [[ "$NFS_UNMOUNT" == [Yy1]* ]]; then
+    {
+      echo "net use Z: /delete /y"
+    }  >> "$SHARE/auto_ip_set.bat"
 
-  info "starting wsdd"
-  wsdd -i dockerbridge -p -n "host.lan" & 
-  info "started wsdd"
+    info "smbd & wsdd not started"
+  else
+    # NFS stop
+    info "starting smbd"
+    smbd -D
+    info "started smbd"
+
+    info "starting wsdd"
+    wsdd -i dockerbridge -p -n "host.lan" & 
+    info "started wsdd"
+  
+  fi
 }
 
 # ######################################
