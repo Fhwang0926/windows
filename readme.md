@@ -19,9 +19,13 @@ Windows in a Docker container.
  - KVM acceleration
  - Web-based viewer
 
+## Video
+
+[![Youtube](https://img.youtube.com/vi/xhGYobuG508/0.jpg)](https://www.youtube.com/watch?v=xhGYobuG508)
+
 ## Usage
 
-Via `docker-compose.yml`
+Via Docker Compose:
 
 ```yaml
 version: "3"
@@ -29,6 +33,8 @@ services:
   windows:
     image: dockurr/windows
     container_name: windows
+    environment:
+      VERSION: "win11"
     devices:
       - /dev/kvm
     cap_add:
@@ -41,7 +47,7 @@ services:
     restart: on-failure
 ```
 
-Via `docker run`
+Via Docker CLI:
 
 ```bash
 docker run -it --rm --name windows -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 120 dockurr/windows
@@ -100,7 +106,7 @@ docker run -it --rm --name windows -p 8006:8006 --device=/dev/kvm --cap-add NET_
 
   So for a better experience you can connect using any Microsoft Remote Desktop client to the IP of the container, using the username `docker` and by leaving the password empty.
 
-  There is a good RDP client for [Android](https://play.google.com/store/apps/details?id=com.microsoft.rdc.androidx) available from the Play Store. One for [iOS](https://apps.apple.com/nl/app/microsoft-remote-desktop/id714464092?l=en-GB) is in the Apple Store. For Linux you can use [rdesktop](http://www.rdesktop.org/) and for Windows you don't need to install anything as it is already ships as part of the operating system.
+  There is a good RDP client for [Android](https://play.google.com/store/apps/details?id=com.microsoft.rdc.androidx) available from the Play Store and one for [iOS](https://apps.apple.com/nl/app/microsoft-remote-desktop/id714464092?l=en-GB) in the Apple Store. For Linux you can use [FreeRDP](https://www.freerdp.com/) and on Windows just type `mstsc` in the search box.
 
 * ### How do I increase the amount of CPU or RAM?
 
@@ -227,6 +233,8 @@ docker run -it --rm --name windows -p 8006:8006 --device=/dev/kvm --cap-add NET_
   ```yaml
   environment:
     DHCP: "Y"
+  devices:
+    - /dev/vhost-net
   device_cgroup_rules:
     - 'c *:* rwm'
   ```
