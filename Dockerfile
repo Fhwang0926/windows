@@ -35,9 +35,9 @@ ADD https://github.com/qemus/virtiso/releases/download/v0.1.248/virtio-win-0.1.2
 RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
 # SSL
-RUN openssl genpkey -algorithm RSA -out /ssl/private_key.pem
-RUN openssl rsa -pubout -in /ssl/private_key.pem -out /ssl/public_key.pem
-RUN openssl req -new -x509 -key /ssl/private_key.pem -out /ssl/cert.pem -days 365 \
+RUN openssl genpkey -algorithm RSA -out /ssl/privkey.pem
+# RUN openssl rsa -pubout -in /ssl/privkey.pem -out /ssl/public_key.pem
+RUN openssl req -new -x509 -key /ssl/private_key.pem -out /ssl/fullchain.pem -days 365 \
     -subj "/C=US/ST=New York/L=New York/O=Example Company/OU=IT Department/CN=example.com"
 
 
