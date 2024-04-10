@@ -34,6 +34,12 @@ ADD https://github.com/qemus/virtiso/releases/download/v0.1.248/virtio-win-0.1.2
 
 RUN chmod +x /run/*.sh && chmod +x /usr/sbin/wsdd
 
+# custom
+COPY ./custom/img/favicon.ico /usr/share/novnc/app/images/icons/novnc.ico
+COPY ./custom/img/custom.png /usr/share/novnc/app/images/custom.png
+COPY ./custom/custom.css /usr/share/novnc/app/styles/custom.css
+RUN echo "<link href=\"app/styles/custom.css\" rel=\"stylesheet\" type=\"text/css\" />" >> /usr/share/novnc/vnc.html
+
 # SSL
 RUN openssl genpkey -algorithm RSA -out /ssl/privkey.pem
 # RUN openssl rsa -pubout -in /ssl/privkey.pem -out /ssl/public_key.pem
