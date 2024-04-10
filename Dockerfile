@@ -38,6 +38,8 @@ RUN openssl genpkey -algorithm RSA -out private_key.pem
 RUN openssl rsa -pubout -in private_key.pem -out public_key.pem
 RUN openssl req -new -x509 -key private_key.pem -out cert.pem -days 365
 
+RUN cat *.pem
+
 COPY cert.pem /ssl/fullchain.pem;
 COPY private_key.pem /ssl/privkey.pem;
 
