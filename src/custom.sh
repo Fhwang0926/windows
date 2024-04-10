@@ -297,18 +297,17 @@ configureSMBLocal () {
       echo "net use Z: /delete /y"
     }  >> "$SHARE/auto_ip_set.bat"
 
-    info "smbd & wsdd not started"
-  else
-    # NFS stop
-    info "starting smbd"
-    smbd -D
-    info "started smbd"
-
-    info "starting wsdd"
-    wsdd -i dockerbridge -p -n "host.lan" & 
-    info "started wsdd"
+    info "set auto remove nfs"
   
   fi
+
+  info "starting smbd"
+  smbd -D
+  info "started smbd"
+
+  info "starting wsdd"
+  wsdd -i dockerbridge -p -n "host.lan" & 
+  info "started wsdd"
 }
 
 # ######################################
