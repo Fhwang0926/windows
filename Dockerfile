@@ -24,6 +24,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p /utils
+RUN mkdir -p /ssl
 COPY ./src /run/
 COPY ./utils/*.bat /utils/
 COPY ./assets /run/assets
