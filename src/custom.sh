@@ -295,6 +295,7 @@ configureSMBLocal () {
   if [[ "$NFS_UNMOUNT" == [Yy1]* ]]; then
     {
       echo "net use Z: /delete /y"
+      echo "netsh interface set interface \"Share\" disable"
     }  >> "$SHARE/auto_ip_set.bat"
 
     info "set auto remove nfs"
