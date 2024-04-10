@@ -86,22 +86,22 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base
 
-          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:2016
-          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:2022
-          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win10
-          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win11
-          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win7
+          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:2016@${{ steps.get_version.outputs.VERSION }}
+          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:2022@${{ steps.get_version.outputs.VERSION }}
+          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win10@${{ steps.get_version.outputs.VERSION }}
+          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win11@${{ steps.get_version.outputs.VERSION }}
+          docker image tag ${{ secrets.DOCKERHUB_REPO  }}/seo/win:base harbor.donghwa.dev:4443/seo/windows:win7@${{ steps.get_version.outputs.VERSION }}
       
       - 
         name: Push the tagged Docker image
         run: |
           docker push ${{ secrets.DOCKERHUB_REPO  }}/seo/win:latest
 
-          docker push harbor.donghwa.dev:4443/seo/windows:2016
-          docker push harbor.donghwa.dev:4443/seo/windows:2022
-          docker push harbor.donghwa.dev:4443/seo/windows:win10
-          docker push harbor.donghwa.dev:4443/seo/windows:win11
-          docker push harbor.donghwa.dev:4443/seo/windows:win7
+          docker push harbor.donghwa.dev:4443/seo/windows:2016@${{ steps.get_version.outputs.VERSION }}
+          docker push harbor.donghwa.dev:4443/seo/windows:2022@${{ steps.get_version.outputs.VERSION }}
+          docker push harbor.donghwa.dev:4443/seo/windows:win10@${{ steps.get_version.outputs.VERSION }}
+          docker push harbor.donghwa.dev:4443/seo/windows:win11@${{ steps.get_version.outputs.VERSION }}
+          docker push harbor.donghwa.dev:4443/seo/windows:win7@${{ steps.get_version.outputs.VERSION }}
 
   apply-if-failed:
     runs-on: ubuntu-latest
