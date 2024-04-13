@@ -220,7 +220,7 @@ configureSMBLocal () {
   mkdir -p "$SHARE"
   chmod -R 777 "$SHARE"
 
-  SAMBA="/etc/samba/smb.conf"
+  SAMBA_CONF="/etc/samba/smb.conf"
 
   {      echo "[global]"
           echo "    server string = Dockur"
@@ -247,7 +247,7 @@ configureSMBLocal () {
           echo "    guest only = yes"
           echo "    force user = root"
           echo "    force group = root"
-  } > "$SAMBA"
+  } > "$SAMBA_CONF"
 
   if [[ "$USER_DATA" == [Yy1]* ]]; then
     {
@@ -259,7 +259,7 @@ configureSMBLocal () {
       echo "    guest only = yes"
       echo "    force user = root"
       echo "    force group = root"
-    }  >> "$SAMBA"
+    }  >> "$SAMBA_CONF"
 
     {
       echo "[pcap]"
@@ -270,7 +270,7 @@ configureSMBLocal () {
       echo "    guest only = yes"
       echo "    force user = root"
       echo "    force group = root"
-    }  >> "$SAMBA"
+    }  >> "$SAMBA_CONF"
   fi
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
