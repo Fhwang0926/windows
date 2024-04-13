@@ -4,6 +4,7 @@ set -Eeuo pipefail
 : "${CUSTOM_OPTS:=""}"
 : "${CUSTOM_SCRIPT:="N"}"
 : "${USER_DATA:="N"}"
+: "${DOWNLOAD_DATA:="N"}"
 : "${WIN_IP:=""}"
 : "${VHOST_FD_CUSTOM:=""}"
 : "${NET_UUID:=""}"
@@ -271,6 +272,20 @@ configureSMBLocal () {
       echo "    force user = root"
       echo "    force group = root"
     }  >> "$SAMBA_CONF"
+  fi
+
+  if [[ "$DOWNLOAD_DATA" == [Yy1]* ]]; then
+    {
+      echo "[download]"
+      echo "    path = /opt/download"
+      echo "    comment = DOWNLOAD_DATA"
+      echo "    writable = yes"
+      echo "    guest ok = yes"
+      echo "    guest only = yes"
+      echo "    force user = root"
+      echo "    force group = root"
+    }  >> "$SAMBA_CONF"
+
   fi
 
   # } | unix2dos > "$SHARE/auto_ip.bat"
