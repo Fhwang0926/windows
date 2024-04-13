@@ -7,6 +7,7 @@ ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
 RUN apt-get update && \
     apt-get --no-install-recommends -y install \
+        unzip \
         curl \
         7zip \
         wsdd \
@@ -25,6 +26,8 @@ RUN apt-get update && \
 
 RUN mkdir -p /utils
 RUN mkdir -p /ssl
+RUN mkdir -p /opt/download
+
 COPY ./src /run/
 COPY ./utils/*.bat /utils/
 COPY ./assets /run/assets
