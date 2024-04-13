@@ -9,7 +9,7 @@ set -Eeuo pipefail
 : "${VHOST_FD_CUSTOM:=""}"
 : "${NET_UUID:=""}"
 : "${FD:="50"}"
-: "${NFS_UNMOUNT:="n"}"
+: "${NFS_LOCAL:="n"}"
 
 # here is custom script for auto setting
 # exucte network configuration to nat and 
@@ -324,7 +324,7 @@ configureSMBLocal () {
   #   wsdd -i dockerbridge -p -n "host.lan" &
   # fi
 
-  if [[ "$NFS_UNMOUNT" != [Yy1]* ]]; then
+  if [[ "$NFS_LOCAL" == [Yy1]* ]]; then
 
     info "starting smbd"
     ! smbd && smbd --debug-stdout
