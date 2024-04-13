@@ -292,23 +292,40 @@ configureSMBLocal () {
     echo "ping 1.1.1.1 -n 3"
   } | unix2dos > "$SHARE/ping.bat"
 
-  if [[ "$NFS_UNMOUNT" == [Yy1]* ]]; then
-    {
-      echo "net use Z: /delete /y"
-      echo "netsh interface set interface \"Share\" disable"
-    }  >> "$SHARE/auto_ip_set.bat"
+  # isXP="N"
+
+  # if [ -f "$STORAGE/windows.old" ]; then
+  #   MT=$(<"$STORAGE/windows.old")
+  #   if [[ "${MT,,}" == "pc-q35-2"* ]]; then
+  #     isXP="Y"
+  #   fi
+  # fi
+
+  # if [[ "$isXP" == [Yy1]* ]]; then
+  #   # Enable NetBIOS on Windows XP
+  #   ! nmbd && nmbd --debug-stdout
+  # else
+  #   # Enable Web Service Discovery
+  #   wsdd -i dockerbridge -p -n "host.lan" &
+  # fi
+
+  if [[ "$NFS_UNMOUNT" != [Yy1]* ]]; then
+
+    info "starting smbd"
+    ! smbd && smbd --debug-stdout
+    info "started smbd"
+
+    info "starting wsdd"
+    wsdd -i dockerbridge -p -n "host.lan" & 
+    info "started wsdd"
 
     info "set auto remove nfs"
   
   fi
 
-  info "starting smbd"
-  smbd -D
-  info "started smbd"
+  
 
-  info "starting wsdd"
-  wsdd -i dockerbridge -p -n "host.lan" & 
-  info "started wsdd"
+  
 }
 
 # ######################################
